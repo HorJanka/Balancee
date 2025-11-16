@@ -45,12 +45,14 @@ export default function SignInPage() {
                                     >
                                         Password
                                     </label>
-                                    <Link
+
+                                {/* Forgot password */}
+                                {/* <Link
                                         href="/forgot-password"
                                         className="text-sm text-lime-600 hover:text-lime-700 font-medium"
                                     >
                                         Forgot password?
-                                    </Link>
+                                    </Link> */}
                                 </div>
                                 <input
                                     type="password"
