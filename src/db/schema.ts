@@ -4,23 +4,23 @@ import {
   varchar,
   timestamp,
   boolean,
+  text
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 //USERS
 export const users = pgTable("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  username: varchar("username", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
-  passwordHash: varchar("password_hash", { length: 255 }).notNull(),
-  currentBalance: integer("current_balance").notNull().default(0),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
+  id: text("id").primaryKey(),
+  username: text("username").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").default(false).notNull(),
+  image: text("image"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .defaultNow()
-    .notNull()
-    .$onUpdate(() => new Date()),
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  currentBalance: integer("current_balance").default(0).notNull(),
 });
 
 // CATEGORIES
@@ -29,7 +29,7 @@ export const categories = pgTable("categories", {
   name: varchar("name", { length: 255 }).notNull(),
   isDefault: boolean("is_default").notNull().default(false),
   description: varchar("description", { length: 1000 }),
-  userId: integer("user_id").references(() => users.id, {
+  userId: text("user_id").references(() => users.id, {
     onDelete: "cascade",
   }),
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -44,7 +44,7 @@ export const categories = pgTable("categories", {
 // TRANSACTIONS
 export const transactions = pgTable("transactions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  userId: integer("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   categoryId: integer("category_id").references(() => categories.id, {
@@ -65,7 +65,7 @@ export const transactions = pgTable("transactions", {
 // MONTHLY_INCOME
 export const monthlyIncome = pgTable("monthly_income", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  userId: integer("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   amount: integer("amount").notNull(),
@@ -84,7 +84,7 @@ export const monthlyIncome = pgTable("monthly_income", {
 // SPENDING_LIMIT
 export const spendingLimit = pgTable("spending_limit", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  userId: integer("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   isMonthly: boolean("is_monthly").notNull().default(true),
@@ -99,6 +99,57 @@ export const spendingLimit = pgTable("spending_limit", {
     .notNull()
     .$onUpdate(() => new Date()),
 });
+
+// AUTH
+
+export const session = pgTable("session", {
+  id: text("id").primaryKey(),
+  expiresAt: timestamp("expires_at").notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export const account = pgTable("account", {
+  id: text("id").primaryKey(),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
+  accessTokenExpiresAt: timestamp("access_token_expires_at"),
+  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const verification = pgTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+
 
 //RELATIONS
 export const usersRelations = relations(users, ({ many }) => ({
