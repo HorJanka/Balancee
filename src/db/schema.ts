@@ -5,6 +5,7 @@ import {
   timestamp,
   boolean,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 //USERS
 export const users = pgTable("users", {
@@ -87,7 +88,7 @@ export const spendingLimit = pgTable("spending_limit", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   isMonthly: boolean("is_monthly").notNull().default(true),
-  limit: numeric("limit", { precision: 12, scale: 2 }).notNull(),
+  limit: integer("limit").notNull(),
   start: timestamp("start", { withTimezone: true }).notNull(),
   end: timestamp("end", { withTimezone: true }).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -98,3 +99,44 @@ export const spendingLimit = pgTable("spending_limit", {
     .notNull()
     .$onUpdate(() => new Date()),
 });
+
+//RELATIONS
+export const usersRelations = relations(users, ({ many }) => ({
+  categories: many(categories),
+  transactions: many(transactions),
+  monthlyIncomes: many(monthlyIncome),
+  spendingLimits: many(spendingLimit),
+}));
+
+export const categoriesRelations = relations(categories, ({ one, many }) => ({
+  user: one(users, {
+    fields: [categories.userId],
+    references: [users.id],
+  }),
+  transactions: many(transactions),
+}));
+
+export const transactionsRelations = relations(transactions, ({ one }) => ({
+  user: one(users, {
+    fields: [transactions.userId],
+    references: [users.id],
+  }),
+  category: one(categories, {
+    fields: [transactions.categoryId],
+    references: [categories.id],
+  }),
+}));
+
+export const monthlyIncomeRelations = relations(monthlyIncome, ({ one }) => ({
+  user: one(users, {
+    fields: [monthlyIncome.userId],
+    references: [users.id],
+  }),
+}));
+
+export const spendingLimitRelations = relations(spendingLimit, ({ one }) => ({
+  user: one(users, {
+    fields: [spendingLimit.userId],
+    references: [users.id],
+  }),
+}));
