@@ -2,6 +2,12 @@
 A budgeting app that shows monthly spending statistics, lets you categorize your spendings and suggests plans for saving up.
 
 # Database - drizzle
+
+To apply changes made to the schema
+```
+npm run db:push
+```
+
 To generate migrations
 ```
 npm run db:generate
