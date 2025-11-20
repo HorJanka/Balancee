@@ -1,0 +1,19 @@
+.label {
+    margin-bottom: 8px;
+}
+
+.field {
+    margin-bottom: 24px;
+}
+
+.input {
+    min-width: fit-content;
+    width: 12.5rem;
+}
+
+.textarea {
+    min-width: fit-content;
+    width: 35rem;
+    min-height: fit-content;
+    height: 38px;
+}
