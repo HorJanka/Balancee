@@ -19,11 +19,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function Select({data, notFound, placeholder, name, setSelected} : {data : {id : string, name : string}[], notFound : string, placeholder : string, name : string, setSelected : React.Dispatch<React.SetStateAction<string>>}) {
+export function Select({data, notFound, placeholder, name,  setSelected} : {data : {id : string | number, name : string}[], notFound : string, placeholder : string, name : string, setSelected : (value : number | string | undefined) => void,}) {
 
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
-
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("");
+ 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -35,7 +35,7 @@ export function Select({data, notFound, placeholder, name, setSelected} : {data 
           name={name}
         >
           {value
-            ? data.find((dat) => dat.name === value)?.name
+            ? data.find((dat) => dat?.name === value)?.name
             : placeholder}
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -48,19 +48,19 @@ export function Select({data, notFound, placeholder, name, setSelected} : {data 
             <CommandGroup>
               {data.map((dat) => (
                 <CommandItem
-                  key={dat.id}
-                  value={dat.name}
+                  key={dat?.id}
+                  value={dat?.name}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
-                    setSelected(dat.id);
+                    setSelected((currentValue === value ? undefined : dat?.id));
                     setOpen(false);
                   }}
                 >
-                  {dat.name}
+                  {dat?.name}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === dat.name ? "opacity-100" : "opacity-0"
+                      value === dat?.name ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

@@ -12,8 +12,12 @@
 }
 
 .textarea {
-    min-width: fit-content;
     width: 35rem;
     min-height: fit-content;
     height: 38px;
+}
+
+.error {
+    color: var(--destructive);
+    font-size: small;
 }

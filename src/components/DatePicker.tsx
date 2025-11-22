@@ -1,6 +1,6 @@
 "use client"
 import { Calendar as CalendarIcon } from "lucide-react";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -9,9 +9,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SetStateAction } from "react";
 
-export function DatePicker({ placeholder, hidden, date, setDate } : { placeholder : string, hidden : boolean, date : Date | undefined, setDate : Dispatch<SetStateAction<Date | undefined>> }) {
+export function DatePicker({ placeholder, hidden, date, onSelect } : { placeholder : string, hidden : boolean, date : Date | undefined, onSelect : (date : Date | undefined) => void}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -33,7 +32,7 @@ export function DatePicker({ placeholder, hidden, date, setDate } : { placeholde
             selected={date}
             captionLayout="dropdown"
             onSelect={(date) => {
-              setDate(date)
+              onSelect(date)
               setOpen(false)
             }}
           />

@@ -5,18 +5,19 @@ import { signOutAction } from "./actions/auth";
 import FormModal from "@/components/FormModal";
 import ExpenseForm from "@/components/modal_forms/ExpenseForm";
 import IncomeForm from "@/components/modal_forms/IncomeForm";
+import { getCategories } from "@/components/modal_forms/send";
+
 
 export default async function Home() {
-  
   const session = await auth.api.getSession({
     headers: await headers(),
-  });
+  });  
 
   if(!session){
     return redirect("/sign-in");
   }
 
-  console.log(session);
+  const categories = await getCategories();
 
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -32,7 +33,7 @@ export default async function Home() {
         buttonText="Költés felvétele"
         buttonVariant="default"
         form={
-          <ExpenseForm />
+          <ExpenseForm categories={categories}/>
         }
       />
       <FormModal

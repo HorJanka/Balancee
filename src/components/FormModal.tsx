@@ -21,7 +21,7 @@ export default function FormModal({buttonText, buttonVariant, title, form} :
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>
-        <div className="mx-11 mb-6 flex flex-row gap-2">
+        <div className="mx-11 mb-6 flex flex-row gap-2 max-h-[60vh] overflow-y-auto">
           <div className="grow">
             {form}
           </div>
