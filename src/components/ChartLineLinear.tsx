@@ -1,6 +1,5 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
 import {
@@ -17,14 +16,10 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-export const description = "A linear line chart"
-
-
-
 const chartConfig = {
   spending: {
     label: "Költés",
-    color: "var(--chart-1)",
+    color: "var(--primary)",
   },
 } satisfies ChartConfig
 
