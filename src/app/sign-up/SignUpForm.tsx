@@ -20,12 +20,12 @@ export default function SignInForm() {
 
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!pattern.test(email)) {
-            setError("Invalid email format");
+            setError("Helytelen email formátum");
             return;
         }
 
         if(password !== confirmPassword){
-            setError("Passwords do not match");
+            setError("A jelszavak nem eggyeznek");
             return;
         }
 
@@ -59,10 +59,10 @@ export default function SignInForm() {
                     {/* Header */}
                     <div className="text-center mb-8">
                         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                            Create Account
+                            Regisztráció
                         </h1>
                         <p className="text-gray-600">
-                            Sign up to get started with Balancee
+                            Hozzon létre egy Balancee fiókot
                         </p>
                     </div>
 
@@ -80,7 +80,7 @@ export default function SignInForm() {
                                 htmlFor="username"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                Username
+                                Felhasználónév
                             </label>
                             <input
                                 type="text"
@@ -118,7 +118,7 @@ export default function SignInForm() {
                                 htmlFor="password"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                Password
+                                Jelszó
                             </label>
                             <input
                                 type="password"
@@ -137,7 +137,7 @@ export default function SignInForm() {
                                 htmlFor="confirmPassword"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                Confirm Password
+                                Jelszó megerősítés
                             </label>
                             <input
                                 type="password"
@@ -156,19 +156,19 @@ export default function SignInForm() {
                             onClick={handleSubmit}
                             className="w-full bg-lime-600 text-white py-2.5 rounded-lg font-medium hover:bg-lime-700 transition duration-200 shadow-lg hover:shadow-xl"
                         >
-                            Sign Up
+                            Regisztráció
                         </button>
                     </div>
 
 
                     {/* Sign In Link */}
                     <p className="text-center text-sm text-gray-600 mt-6">
-                        Already have an account?{" "}
+                        Már rendelkezik fiókkal?{" "}
                         <Link
                             href="/sign-in"
                             className="text-lime-600 font-medium hover:text-lime-700"
                         >
-                            Sign In
+                            Belépés
                         </Link>
                     </p>
                 </div>

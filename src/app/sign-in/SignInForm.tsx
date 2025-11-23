@@ -15,7 +15,7 @@ export default function SignInForm() {
 
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(!pattern.test(email)){
-            setError("Invalid email format");
+            setError("Helytelen email formátum");
             return;
         }
         
@@ -33,7 +33,8 @@ export default function SignInForm() {
                 console.log("Sign in successfull!");
             },
             onError: (ctx) => {
-                setError(ctx.error.message);
+                //setError(ctx.error.message);
+                setError("Helytelen email vagy jelszó");
                 //console.error("Sign in failed:",ctx.error);
             }
         }
@@ -48,10 +49,10 @@ export default function SignInForm() {
                     {/* Header */}
                     <div className="text-center mb-8">
                         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                            Welcome Back
+                            Üdvözöljük
                         </h1>
                         <p className="text-gray-600">
-                            Sign in to your Balancee account
+                            Lépjen be a Balancee fiókjába
                         </p>
                     </div>
 
@@ -88,7 +89,7 @@ export default function SignInForm() {
                                     htmlFor="password"
                                     className="block text-sm font-medium text-gray-700"
                                 >
-                                    Password
+                                    Jelszó
                                 </label>
 
                                 {/* Forgot password */}
@@ -116,18 +117,18 @@ export default function SignInForm() {
                             onClick={handleSubmit}
                             className="w-full bg-lime-600 text-white py-2.5 rounded-lg font-medium hover:bg-lime-700 transition duration-200 shadow-lg hover:shadow-xl"
                         >
-                            Sign In
+                            Bejelentkezés
                         </button>
                     </div>
 
                     {/* Sign Up Link */}
                     <p className="text-center text-sm text-gray-600 mt-6">
-                        Don't have an account?{" "}
+                        Nem regisztrált felhasználó?{" "}
                         <Link
                             href="/sign-up"
                             className="text-lime-600 font-medium hover:text-lime-700"
                         >
-                            Sign up
+                            Regisztráció
                         </Link>
                     </p>
                 </div>
