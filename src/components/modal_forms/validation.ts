@@ -87,7 +87,6 @@ export function validateIncome(formData : IncomeState) {
             errors.amount = "Kötelező megadni összeget.";
             errors.no++;
             
-            console.log("error", errors);
             return errors;
         } 
 

@@ -37,8 +37,6 @@ export default function ExpenseForm({categories, setOpen} : { categories : {id :
         const errors = validateExpense(formData);
         setFormErrors(errors);
         
-        console.log("Formdata: ",formData);
-        console.log("Formerrors: ",errors);
         if(errors.no > 0) return;
         setOpen(false);
         
