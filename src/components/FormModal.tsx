@@ -1,3 +1,4 @@
+"use client"
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Drawer,
@@ -8,29 +9,37 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { VariantProps } from "class-variance-authority";
-import { ReactNode } from "react";
-export default function FormModal({buttonText, buttonVariant, title, form} : 
-  {buttonText : string, buttonVariant : VariantProps<typeof buttonVariants>["variant"], title: string, form: ReactNode}) : ReactNode {
-  return (
-  <Drawer>
-    <DrawerTrigger asChild>
-      <Button variant={buttonVariant}>{buttonText}</Button>
-    </DrawerTrigger>
-    <DrawerContent>
-      <div>
-        <DrawerHeader>
-          <DrawerTitle>{title}</DrawerTitle>
-        </DrawerHeader>
-        <div className="mx-11 mb-6 flex flex-row gap-2 max-h-[60vh] overflow-y-auto">
-          <div className="grow">
-            {form}
+import { Dispatch, ReactNode, SetStateAction } from "react";
+import styles from "./modal_forms/forms.module.css";
+
+export default function FormModal(
+  { buttonText, buttonVariant, title, children, open, setOpen } : 
+  {
+    buttonText : string,
+    buttonVariant : VariantProps<typeof buttonVariants>["variant"],
+    title: string,
+    children: ReactNode,
+    open : boolean,
+    setOpen : Dispatch<SetStateAction<boolean>>
+  }) : ReactNode {
+    return (
+    <Drawer open={open} onOpenChange={(open) => setOpen(open)}>
+      <DrawerTrigger asChild>
+        <Button variant={buttonVariant}>{buttonText}</Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div>
+          <DrawerHeader>
+            <DrawerTitle>{title}</DrawerTitle>
+          </DrawerHeader>
+          <div className="mx-auto mb-6 max-h-[60vh] max-w-[40%] overflow-y-auto">
+            {children}
+            <DrawerClose asChild className={styles.cancel}>
+              <Button variant="outline">Mégsem</Button>
+            </DrawerClose>
           </div>
-          <DrawerClose asChild className="self-end">
-            <Button variant="outline">Mégsem</Button>
-          </DrawerClose>
         </div>
-      </div>
-    </DrawerContent>
-  </Drawer>
-  );
+      </DrawerContent>
+    </Drawer>
+    );
 }

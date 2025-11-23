@@ -12,7 +12,7 @@
 }
 
 .textarea {
-    width: 35rem;
+    width: 100%;
     min-height: fit-content;
     height: 38px;
 }
@@ -20,4 +20,11 @@
 .error {
     color: var(--destructive);
     font-size: small;
+}
+
+.cancel {
+    position: fixed;
+    left: 85%;
+    left: calc(75% + 99px);
+    bottom: 24px;
 }

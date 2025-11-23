@@ -61,7 +61,7 @@ export async function getCategories() {
 
     if(!session) return [];
 
-    const result = db
+    const result = await db
         .select({
             id: categories.id,
             name: categories.name

@@ -4,14 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { FormEvent, ReactNode, useState } from "react";
+import { Dispatch, FormEvent, ReactNode, SetStateAction, useState } from "react";
 import { Button } from "../ui/button";
 import styles from "./forms.module.css";
 import { IncomeState, IncomeErrors, validateIncome } from "./validation";
 import { saveIncome } from "./send";
 import { handleInputChange, setState } from "./helpers";
 
-export default function IncomeForm() : ReactNode {
+export default function IncomeForm({ setOpen } : { setOpen : Dispatch<SetStateAction<boolean>> }) : ReactNode {
 
     const [formData, setFormData] = useState<IncomeState>({
         amount: "",
@@ -36,6 +36,7 @@ export default function IncomeForm() : ReactNode {
         setFormErrors(errors);
 
         if(errors.no > 0) return;
+        setOpen(false);
 
         // Send validated data to database
         await saveIncome(formData);
@@ -75,7 +76,7 @@ export default function IncomeForm() : ReactNode {
                     <p className={styles.error} hidden={!formData.regular}>{formErrors.name}</p>
                     <Input hidden={!formData.regular} type="text" name="name" maxLength={255} value={formData.name} className={styles.input} onChange={(e) => handleInputChange(e, setFormData)} />
                 </div>
-                <Button variant="default" type="submit" className="float-right">Hozzáad</Button>
+                <Button variant="default" type="submit" className="fixed bottom-6 left-[75%]">Hozzáad</Button>
             </form>
         </div>;
 }

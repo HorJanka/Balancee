@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/Select";
 import { Textarea } from "@/components/ui/textarea";
-import { FormEvent, ReactNode, useState } from "react";
+import { Dispatch, FormEvent, ReactNode, SetStateAction, useState } from "react";
 import { DatePicker } from "../DatePicker";
 import { Button } from "../ui/button";
 import styles from "./forms.module.css";
@@ -14,9 +14,9 @@ import { handleInputChange, setState } from "./helpers";
 import { validateExpense } from "./validation";
 import { saveExpense } from "./send";
 
-export default function ExpenseForm({categories} : { categories : {id : string | number, name : string}[]}) : ReactNode {
+export default function ExpenseForm({categories, setOpen} : { categories : {id : string | number, name : string}[], setOpen : Dispatch<SetStateAction<boolean>>}) : ReactNode {
     const [formData, setFormData] = useState<ExpenseState>({
-        amount: "0",
+        amount: "",
         category: undefined,
         description: undefined,
         other: false,
@@ -40,6 +40,7 @@ export default function ExpenseForm({categories} : { categories : {id : string |
         console.log("Formdata: ",formData);
         console.log("Formerrors: ",errors);
         if(errors.no > 0) return;
+        setOpen(false);
         
         // Send validated data to database
         await saveExpense(formData);
@@ -73,7 +74,7 @@ export default function ExpenseForm({categories} : { categories : {id : string |
                     <p hidden={!formData.other} className={styles.error}>{formErrors.date}</p>
                     <DatePicker hidden={!formData.other} placeholder="Válassz dátumot" date={formData.date} onSelect={(date) => setState("date", date, setFormData)} />
                 </div>
-                <Button variant="default" type="submit" className="float-right">Hozzáad</Button>
+                <Button variant="default" type="submit" className="fixed bottom-6 left-[75%]">Hozzáad</Button>
             </form>
         </div>;
 }
