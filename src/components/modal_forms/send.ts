@@ -5,6 +5,7 @@ import { ExpenseState, IncomeState } from "./validation";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { eq, or } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export async function saveIncome(formData : IncomeState) {
     const session = await auth.api.getSession({
@@ -52,6 +53,9 @@ export async function saveExpense(formData : ExpenseState) {
                 occurredAt: (formData.other && formData.date) ? formData.date : new Date(),
                 description: formData.description
             });
+    
+    // Revalidate the page to refresh the charts
+    revalidatePath("/");
 }
 
 export async function getCategories() {
