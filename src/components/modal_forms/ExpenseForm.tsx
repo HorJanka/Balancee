@@ -13,6 +13,7 @@ import { ExpenseErrors, ExpenseState } from "./validation";
 import { handleInputChange, setState } from "./helpers";
 import { validateExpense } from "./validation";
 import { saveExpense } from "./send";
+import { DateTime } from "luxon";
 
 export default function ExpenseForm({categories, setOpen} : { categories : {id : string | number, name : string}[], setOpen : Dispatch<SetStateAction<boolean>>}) : ReactNode {
     const [formData, setFormData] = useState<ExpenseState>({
@@ -40,8 +41,14 @@ export default function ExpenseForm({categories, setOpen} : { categories : {id :
         if(errors.no > 0) return;
         setOpen(false);
         
+
+        const sendData = {...formData};
+        if(sendData.date){
+           sendData.date = DateTime.fromJSDate(sendData.date).toUTC().toJSDate();
+        }
+
         // Send validated data to database
-        await saveExpense(formData);
+        await saveExpense(sendData);
     }
 
     return <div>
