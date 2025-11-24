@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { signOutAction } from "./actions/auth";
 import { getCategories } from "@/components/modal_forms/send";
 import TransactionsMenuBar from "@/components/TransactionsMenuBar";
+import DailySpendingsChart from "@/components/daily_spendings/DailySpendingsChart";
 
 
 export default async function Home() {
@@ -19,6 +20,7 @@ export default async function Home() {
   return (
     <div>
       <div className="min-h-screen flex flex-col min-h-full items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+        <DailySpendingsChart />
         Welcome
         <form action={signOutAction}>
           <button 
