@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { eq, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { DateTime } from "luxon";
 
 export async function saveIncome(formData : IncomeState) {
     const session = await auth.api.getSession({
@@ -31,7 +32,7 @@ export async function saveIncome(formData : IncomeState) {
                 userId: session.user.id,
                 amount: parseInt(formData.amount),
                 categoryId: null,
-                occurredAt: new Date(),
+                occurredAt: DateTime.now().toUTC().toJSDate(),
                 description: formData.description
             });
     }
@@ -43,14 +44,14 @@ export async function saveExpense(formData : ExpenseState) {
     });
 
     if(!session) return;
-    
+  
     await db
             .insert(transactions)
             .values({
                 userId: session.user.id,
                 amount: -parseInt(formData.amount),
                 categoryId: formData.category,
-                occurredAt: (formData.other && formData.date) ? formData.date : new Date(),
+                occurredAt: (formData.other && formData.date) ? formData.date : DateTime.now().toUTC().toJSDate(),
                 description: formData.description
             });
     
