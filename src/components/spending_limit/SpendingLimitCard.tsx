@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "../ui/card";
 
-export function SpendingLimit() {
+export function SpendingLimitCard() {
   return (
     <Card className="relative">
       <CardContent>
