@@ -30,5 +30,6 @@ export type SpendingLimitColumn = {
 export type SpendingResultForLimit = {
   spent: number;
   remaining: number;
-  isOver: boolean;
+  textColor: string;
+  infoText: string;
 };

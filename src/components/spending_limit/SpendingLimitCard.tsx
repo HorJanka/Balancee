@@ -16,33 +16,8 @@ export async function SpendingLimitCard() {
 
   // Daily limit calculations
   const daily = calculateDailyLimitStatus(userTransactions, dailyLimit, day);
-
-  const dailyTextColor = !dailyLimit
-    ? "text-muted-foreground"
-    : daily.isOver
-    ? "text-destructive"
-    : "text-primary";
-
-  const dailyLimitInfoText = !dailyLimit
-    ? "Nincs megadva korlát"
-    : daily.isOver
-    ? `${daily.spent - dailyLimit} Ft-tal túllépve`
-    : `még ${daily.remaining} Ft`;
-
   // Monthly limit calculations
   const monthly = calculateMonthlyLimitStatus(userTransactions, monthlyLimit);
-
-  const monthlyTextColor = !monthlyLimit
-    ? "text-muted-foreground"
-    : monthly.isOver
-    ? "text-destructive"
-    : "text-primary";
-
-  const monthlyLimitInfoText = !monthlyLimit
-    ? "Nincs megadva korlát"
-    : monthly.isOver
-    ? `${monthly.spent - monthlyLimit} Ft-tal túllépve`
-    : `még ${monthly.remaining} Ft`;
 
   return (
     <Card className="relative">
@@ -51,10 +26,10 @@ export async function SpendingLimitCard() {
         <div className="flex flex-col pb-2 pr-8">
           <div className="flex justify-between items-center gap-10">
             <span className="text-md font-semibold">Napi korlát</span>
-            <span className={cn("text-xs", dailyTextColor)}>{dailyLimitInfoText}</span>
+            <span className={cn("text-xs", daily.textColor)}>{daily.infoText}</span>
           </div>
           <p className="flex gap-2 text-2xl font-semibold pl-8">
-            <span className={cn("", dailyTextColor)}>{dailyLimit ?? "-------"} Ft</span>
+            <span className={cn("", daily.textColor)}>{dailyLimit ?? "-------"} Ft</span>
             <span className="text-muted-foreground"> / {daily.spent} Ft</span>
           </p>
         </div>
@@ -65,10 +40,10 @@ export async function SpendingLimitCard() {
         <div className="flex flex-col pt-2 pr-8">
           <div className="flex justify-between items-center gap-10">
             <span className="text-md font-semibold">Havi korlát</span>
-            <span className={cn("text-xs", monthlyTextColor)}>{monthlyLimitInfoText}</span>
+            <span className={cn("text-xs", monthly.textColor)}>{monthly.infoText}</span>
           </div>
           <p className="flex gap-2 text-2xl font-semibold pl-8">
-            <span className={cn("", monthlyTextColor)}>{monthlyLimit ?? "-------"} Ft</span>
+            <span className={cn("", monthly.textColor)}>{monthlyLimit ?? "-------"} Ft</span>
             <span className="text-muted-foreground"> / {monthly.spent} Ft</span>
           </p>
         </div>

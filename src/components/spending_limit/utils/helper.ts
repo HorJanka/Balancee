@@ -67,16 +67,24 @@ export function calculateDailyLimitStatus(
     return {
       spent,
       remaining: 0,
-      isOver: false,
+      textColor: "text-muted-foreground",
+      infoText: "Nincs megadva korlát",
     };
   }
 
   const remaining = Math.max(dailyLimit - spent, 0);
 
+  const isOverLimit = spent > dailyLimit;
+
+  const textColor = isOverLimit ? "text-destructive" : "text-primary";
+
+  const infoText = isOverLimit ? `${spent - dailyLimit} Ft-tal túllépve` : `még ${remaining} Ft`;
+
   return {
     spent,
     remaining,
-    isOver: spent > dailyLimit,
+    textColor,
+    infoText,
   };
 }
 
@@ -89,15 +97,23 @@ export function calculateMonthlyLimitStatus(
     return {
       spent,
       remaining: 0,
-      isOver: false,
+      textColor: "text-muted-foreground",
+      infoText: "Nincs megadva korlát",
     };
   }
 
   const remaining = Math.max(monthlyLimit - spent, 0);
 
+  const isOverLimit = spent > monthlyLimit;
+
+  const textColor = isOverLimit ? "text-destructive" : "text-primary";
+
+  const infoText = isOverLimit ? `${spent - monthlyLimit} Ft-tal túllépve` : `még ${remaining} Ft`;
+
   return {
     spent,
     remaining,
-    isOver: spent > monthlyLimit,
+    textColor,
+    infoText,
   };
 }
