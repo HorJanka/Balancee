@@ -1,7 +1,7 @@
 import { SpendingLimit } from "@/db/types";
 import { DateTime } from "luxon";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { SpendingLimitColumn, SpendingLimitState } from "./types";
+import { SpendingLimitColumn, SpendingLimitState, SpendingResultForLimit } from "./types";
 
 export const handleInput = <T extends SpendingLimitState>(
   e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -51,4 +51,53 @@ export function getDayStart(date: Date): Date {
 
 export function getDayEnd(date: Date): Date {
   return DateTime.fromJSDate(date).endOf("day").toJSDate();
+}
+
+export function calculateDailyLimitStatus(
+  userTransactions: { day: string; spending: number }[] | undefined,
+  dailyLimit: number | undefined,
+  day: number
+): SpendingResultForLimit {
+  const spent =
+    userTransactions?.reduce(
+      (sum, transaction) => (Number(transaction!.day) === day ? sum + transaction!.spending : sum),
+      0
+    ) ?? 0;
+  if (!dailyLimit) {
+    return {
+      spent,
+      remaining: 0,
+      isOver: false,
+    };
+  }
+
+  const remaining = Math.max(dailyLimit - spent, 0);
+
+  return {
+    spent,
+    remaining,
+    isOver: spent > dailyLimit,
+  };
+}
+
+export function calculateMonthlyLimitStatus(
+  userTransactions: { day: string; spending: number }[] | undefined,
+  monthlyLimit: number | undefined
+): SpendingResultForLimit {
+  const spent = userTransactions?.reduce((sum, transaction) => sum + transaction!.spending, 0) ?? 0;
+  if (!monthlyLimit) {
+    return {
+      spent,
+      remaining: 0,
+      isOver: false,
+    };
+  }
+
+  const remaining = Math.max(monthlyLimit - spent, 0);
+
+  return {
+    spent,
+    remaining,
+    isOver: spent > monthlyLimit,
+  };
 }

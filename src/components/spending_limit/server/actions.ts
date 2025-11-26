@@ -5,6 +5,7 @@ import { spendingLimit } from "@/db/schema";
 import { NewSpendingLimit } from "@/db/types";
 import { auth } from "@/lib/auth";
 import { desc, eq } from "drizzle-orm";
+import { DateTime } from "luxon";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import {
@@ -23,6 +24,7 @@ async function getSessionOrReturn() {
   return session;
 }
 
+// Array
 export async function getSpendingLimitsByIsMonthly(
   isMonthly: boolean
 ): Promise<SpendingLimitColumn[] | undefined> {
@@ -34,12 +36,33 @@ export async function getSpendingLimitsByIsMonthly(
   const result = await db
     .select()
     .from(spendingLimit)
-    .orderBy(desc(spendingLimit.start))
-    .where(eq(spendingLimit.isMonthly, isMonthly));
+    .where(eq(spendingLimit.isMonthly, isMonthly))
+    .orderBy(desc(spendingLimit.start));
 
   const mappedResult = result.map((limit) => mapSpendingLimitToSpendingLimitColumn(limit));
 
   return mappedResult;
+}
+
+// Singular
+export async function getSpendingLimitByIsMonthly(isMonthly: boolean): Promise<number | undefined> {
+  // Get authenticated user
+  const session = await getSessionOrReturn();
+  if (!session) return;
+
+  // Query spending limits
+  const spendingLimits = await db
+    .select()
+    .from(spendingLimit)
+    .where(eq(spendingLimit.isMonthly, isMonthly))
+    .orderBy(desc(spendingLimit.start));
+
+  const now = DateTime.now();
+  const currentLimit = spendingLimits.find(
+    (limit) => now >= DateTime.fromJSDate(limit.start) && now <= DateTime.fromJSDate(limit.end)
+  );
+
+  return currentLimit?.limit;
 }
 
 export async function getSpendingLimitsIntervalsByIsMonthly(
@@ -51,26 +74,13 @@ export async function getSpendingLimitsIntervalsByIsMonthly(
 
   // Query spending limits
   const result = await db
-    .select({ start: spendingLimit.start, end: spendingLimit.end })
+    .select({ id: spendingLimit.id, start: spendingLimit.start, end: spendingLimit.end })
     .from(spendingLimit)
-    .orderBy(desc(spendingLimit.start))
-    .where(eq(spendingLimit.isMonthly, isMonthly));
+    .where(eq(spendingLimit.isMonthly, isMonthly))
+    .orderBy(desc(spendingLimit.start));
 
   return result;
 }
-
-// export async function getSpendingLimitById(
-//   spendingLimitId: number
-// ): Promise<SpendingLimit | undefined> {
-//   // Get authenticated user
-//   const session = await getSessionOrReturn();
-//   if (!session) return;
-
-//   // Get spending limit by id
-//   const result = await db.select().from(spendingLimit).where(eq(spendingLimit.id, spendingLimitId));
-
-//   return result[0];
-// }
 
 export async function addSpendingLimit({
   formData,

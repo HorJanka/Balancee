@@ -26,3 +26,9 @@ export type SpendingLimitColumn = {
   end: Date;
   isMonthly: boolean; // for dynamic formatting
 };
+
+export type SpendingResultForLimit = {
+  spent: number;
+  remaining: number;
+  isOver: boolean;
+};
