@@ -2,13 +2,19 @@
 
 import { db } from "@/db";
 import { spendingLimit } from "@/db/schema";
-import { NewSpendingLimit, SpendingLimit } from "@/db/types";
+import { NewSpendingLimit } from "@/db/types";
 import { auth } from "@/lib/auth";
 import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { getDayEnd, getDayStart, getMonthEnd, getMonthStart } from "../utils/helper";
-import { SpendingLimitsIntervals, SpendingLimitState } from "../utils/types";
+import {
+  getDayEnd,
+  getDayStart,
+  getMonthEnd,
+  getMonthStart,
+  mapSpendingLimitToSpendingLimitColumn,
+} from "../utils/helper";
+import { SpendingLimitColumn, SpendingLimitsIntervals, SpendingLimitState } from "../utils/types";
 
 // Helper functions
 async function getSessionOrReturn() {
@@ -19,7 +25,7 @@ async function getSessionOrReturn() {
 
 export async function getSpendingLimitsByIsMonthly(
   isMonthly: boolean
-): Promise<SpendingLimit[] | undefined> {
+): Promise<SpendingLimitColumn[] | undefined> {
   // Get authenticated user
   const session = await getSessionOrReturn();
   if (!session) return;
@@ -31,7 +37,9 @@ export async function getSpendingLimitsByIsMonthly(
     .orderBy(desc(spendingLimit.start))
     .where(eq(spendingLimit.isMonthly, isMonthly));
 
-  return result;
+  const mappedResult = result.map((limit) => mapSpendingLimitToSpendingLimitColumn(limit));
+
+  return mappedResult;
 }
 
 export async function getSpendingLimitsIntervalsByIsMonthly(
