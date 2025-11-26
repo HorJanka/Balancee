@@ -57,8 +57,6 @@ export function validateSpendingLimit({
     errors.no++;
   }
 
-  console.log(isEditing, spendingLimit);
-
   // Interval overlap
   if (spendingLimitsIntervals && formData.start && formData.end) {
     const overlap = spendingLimitsIntervals
