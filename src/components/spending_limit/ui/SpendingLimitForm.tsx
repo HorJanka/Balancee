@@ -14,17 +14,14 @@ import { handleInput, setState } from "../utils/helper";
 import { SpendingLimitColumn, SpendingLimitErrors, SpendingLimitState } from "../utils/types";
 import { validateSpendingLimit } from "../utils/validation";
 
-export function SpendingLimitForm({
-  setOpen,
-  isMonthly,
-  isEditing,
-  spendingLimit,
-}: {
+type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
   isMonthly: boolean;
   isEditing: boolean;
   spendingLimit?: SpendingLimitColumn; // only needed when editing an existing spending limit
-}) {
+};
+
+export function SpendingLimitForm({ setOpen, isMonthly, isEditing, spendingLimit }: Props) {
   const [formData, setFormData] = useState<SpendingLimitState>({
     limit: isEditing && spendingLimit ? String(spendingLimit.limit) : "",
     start: isEditing && spendingLimit ? spendingLimit.start : undefined,
@@ -50,12 +47,12 @@ export function SpendingLimitForm({
     if (errors.no > 0) return;
     setOpen(false);
 
-    // IF Edit spending limit
+    // Edit spending limit
     if (isEditing && spendingLimit) {
       const spendingLimitId = spendingLimit.id;
-      const isMonthly = spendingLimit.isMonthly;
       await editSpendingLimit({ formData, spendingLimitId, isMonthly });
     } else {
+      // Add spending limit
       await addSpendingLimit({ formData, isMonthly });
     }
   }

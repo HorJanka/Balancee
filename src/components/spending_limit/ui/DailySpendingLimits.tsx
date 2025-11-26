@@ -8,8 +8,10 @@ import { columns } from "../table/columns";
 import { SpendingLimitColumn } from "../utils/types";
 import { SpendingLimitForm } from "./SpendingLimitForm";
 
-export function DailySpendingLimits({ data }: { data: SpendingLimitColumn[] }) {
-  const [open, setOpen] = useState<boolean>(false);
+type Props = { data: SpendingLimitColumn[] };
+
+export function DailySpendingLimits({ data }: Props) {
+  const [formOpen, setFormOpen] = useState<boolean>(false);
 
   return (
     <Card>
@@ -20,10 +22,10 @@ export function DailySpendingLimits({ data }: { data: SpendingLimitColumn[] }) {
             buttonText="Új korlát"
             buttonVariant="default"
             title="Új napi korlát létrehozása"
-            open={open}
-            setOpen={setOpen}
+            open={formOpen}
+            setOpen={setFormOpen}
           >
-            <SpendingLimitForm setOpen={setOpen} isMonthly={false} isEditing={false} />
+            <SpendingLimitForm setOpen={setFormOpen} isMonthly={false} isEditing={false} />
           </FormModal>
         </CardTitle>
       </CardHeader>
