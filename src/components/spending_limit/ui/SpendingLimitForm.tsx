@@ -41,7 +41,12 @@ export function SpendingLimitForm({ setOpen, isMonthly, isEditing, spendingLimit
     e.preventDefault();
 
     const spendingLimitsIntervals = await getSpendingLimitsIntervalsByIsMonthly(isMonthly);
-    const errors = validateSpendingLimit({ formData, spendingLimitsIntervals });
+    const errors = validateSpendingLimit({
+      formData,
+      spendingLimitsIntervals,
+      isEditing,
+      spendingLimit,
+    });
     setErrors(errors);
 
     if (errors.no > 0) return;

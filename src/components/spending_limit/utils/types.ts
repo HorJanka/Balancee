@@ -14,6 +14,7 @@ export type SpendingLimitErrors = {
 };
 
 export type SpendingLimitsIntervals = {
+  id: number;
   start: Date;
   end: Date;
 };

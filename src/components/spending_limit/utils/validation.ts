@@ -1,11 +1,20 @@
-import { SpendingLimitErrors, SpendingLimitsIntervals, SpendingLimitState } from "./types";
+import {
+  SpendingLimitColumn,
+  SpendingLimitErrors,
+  SpendingLimitsIntervals,
+  SpendingLimitState,
+} from "./types";
 
 export function validateSpendingLimit({
   formData,
   spendingLimitsIntervals,
+  isEditing,
+  spendingLimit,
 }: {
   formData: SpendingLimitState;
   spendingLimitsIntervals: SpendingLimitsIntervals[] | undefined;
+  isEditing: boolean;
+  spendingLimit?: SpendingLimitColumn;
 }) {
   const errors: SpendingLimitErrors = {
     limit: "",
@@ -48,11 +57,13 @@ export function validateSpendingLimit({
     errors.no++;
   }
 
+  console.log(isEditing, spendingLimit);
+
   // Interval overlap
   if (spendingLimitsIntervals && formData.start && formData.end) {
-    const overlap = spendingLimitsIntervals.some(
-      (interval) => formData.start! <= interval.end && formData.end! >= interval.start
-    );
+    const overlap = spendingLimitsIntervals
+      .filter((interval) => !isEditing || interval.id !== spendingLimit?.id)
+      .some((interval) => formData.start! <= interval.end && formData.end! >= interval.start);
 
     if (overlap) {
       errors.interval = "Nem fedhetik egymást az időintervallumok.";
