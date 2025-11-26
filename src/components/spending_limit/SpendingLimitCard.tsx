@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { getDailySpendings } from "../daily_spendings/actions";
 import { Card, CardContent } from "../ui/card";
 import { getSpendingLimitByIsMonthly } from "./server/actions";
-import { calculateDailyLimitStatus, calculateMonthlyLimitStatus } from "./utils/helper";
+import { calculateLimitStatusAndSpending, formatHUF } from "./utils/helper";
 
 export async function SpendingLimitCard() {
   const now = new Date();
@@ -15,9 +15,13 @@ export async function SpendingLimitCard() {
   const dailyLimit = await getSpendingLimitByIsMonthly(false);
 
   // Daily limit calculations
-  const daily = calculateDailyLimitStatus(userTransactions, dailyLimit, day);
+  const daily = calculateLimitStatusAndSpending({
+    userTransactions,
+    limit: dailyLimit,
+    filterFn: (t) => Number(t.day) === day,
+  });
   // Monthly limit calculations
-  const monthly = calculateMonthlyLimitStatus(userTransactions, monthlyLimit);
+  const monthly = calculateLimitStatusAndSpending({ userTransactions, limit: monthlyLimit });
 
   return (
     <Card className="relative">
@@ -29,8 +33,8 @@ export async function SpendingLimitCard() {
             <span className={cn("text-xs", daily.textColor)}>{daily.infoText}</span>
           </div>
           <p className="flex gap-2 text-2xl font-semibold pl-8">
-            <span className={cn("", daily.textColor)}>{dailyLimit ?? "-------"} Ft</span>
-            <span className="text-muted-foreground"> / {daily.spent} Ft</span>
+            <span className={cn("", daily.textColor)}>{formatHUF(dailyLimit) ?? "-------"}</span>
+            <span className="text-muted-foreground"> / {formatHUF(daily.spent)}</span>
           </p>
         </div>
 
@@ -43,8 +47,10 @@ export async function SpendingLimitCard() {
             <span className={cn("text-xs", monthly.textColor)}>{monthly.infoText}</span>
           </div>
           <p className="flex gap-2 text-2xl font-semibold pl-8">
-            <span className={cn("", monthly.textColor)}>{monthlyLimit ?? "-------"} Ft</span>
-            <span className="text-muted-foreground"> / {monthly.spent} Ft</span>
+            <span className={cn("", monthly.textColor)}>
+              {formatHUF(monthlyLimit) ?? "-------"}
+            </span>
+            <span className="text-muted-foreground">/ {formatHUF(monthly.spent)}</span>
           </p>
         </div>
       </CardContent>

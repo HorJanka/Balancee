@@ -33,3 +33,8 @@ export type SpendingResultForLimit = {
   textColor: string;
   infoText: string;
 };
+
+export type Transaction = {
+  day: string;
+  spending: number;
+};

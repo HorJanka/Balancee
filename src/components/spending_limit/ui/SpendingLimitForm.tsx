@@ -4,13 +4,13 @@ import { DatePicker } from "@/components/DatePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { handleInput, setState } from "@/lib/utils";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import {
   addSpendingLimit,
   editSpendingLimit,
   getSpendingLimitsIntervalsByIsMonthly,
 } from "../server/actions";
-import { handleInput, setState } from "../utils/helper";
 import { SpendingLimitColumn, SpendingLimitErrors, SpendingLimitState } from "../utils/types";
 import { validateSpendingLimit } from "../utils/validation";
 
