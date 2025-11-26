@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { spendingLimit } from "@/db/schema";
 import { NewSpendingLimit, SpendingLimit } from "@/db/types";
 import { auth } from "@/lib/auth";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { getDayEnd, getDayStart, getMonthEnd, getMonthStart } from "../utils/helper";
@@ -28,10 +28,8 @@ export async function getSpendingLimitsByIsMonthly(
   const result = await db
     .select()
     .from(spendingLimit)
+    .orderBy(desc(spendingLimit.start))
     .where(eq(spendingLimit.isMonthly, isMonthly));
-
-  // Sorted DESC by start date
-  const sortedResult = [...result].sort((a, b) => a.start.getTime() - b.start.getTime());
 
   return result;
 }
@@ -47,6 +45,7 @@ export async function getSpendingLimitsIntervalsByIsMonthly(
   const result = await db
     .select({ start: spendingLimit.start, end: spendingLimit.end })
     .from(spendingLimit)
+    .orderBy(desc(spendingLimit.start))
     .where(eq(spendingLimit.isMonthly, isMonthly));
 
   return result;
