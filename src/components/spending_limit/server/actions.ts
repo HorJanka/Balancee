@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { spendingLimit } from "@/db/schema";
 import { NewSpendingLimit } from "@/db/types";
 import { auth } from "@/lib/auth";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -36,7 +36,7 @@ export async function getSpendingLimitsByIsMonthly(
   const result = await db
     .select()
     .from(spendingLimit)
-    .where(eq(spendingLimit.isMonthly, isMonthly))
+    .where(and(eq(spendingLimit.userId, session.user.id), eq(spendingLimit.isMonthly, isMonthly)))
     .orderBy(desc(spendingLimit.start));
 
   const mappedResult = result.map((limit) => mapSpendingLimitToSpendingLimitColumn(limit));
@@ -54,7 +54,7 @@ export async function getSpendingLimitByIsMonthly(isMonthly: boolean): Promise<n
   const spendingLimits = await db
     .select()
     .from(spendingLimit)
-    .where(eq(spendingLimit.isMonthly, isMonthly))
+    .where(and(eq(spendingLimit.userId, session.user.id), eq(spendingLimit.isMonthly, isMonthly)))
     .orderBy(desc(spendingLimit.start));
 
   const now = DateTime.now();
@@ -76,7 +76,7 @@ export async function getSpendingLimitsIntervalsByIsMonthly(
   const result = await db
     .select({ id: spendingLimit.id, start: spendingLimit.start, end: spendingLimit.end })
     .from(spendingLimit)
-    .where(eq(spendingLimit.isMonthly, isMonthly))
+    .where(and(eq(spendingLimit.userId, session.user.id), eq(spendingLimit.isMonthly, isMonthly)))
     .orderBy(desc(spendingLimit.start));
 
   return result;
