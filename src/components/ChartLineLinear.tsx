@@ -1,36 +1,30 @@
-"use client"
+"use client";
 
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
 const chartConfig = {
   spending: {
     label: "Költés",
     color: "var(--primary)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 interface Props {
-  chartData: object[],
-  title: string,
-  description: string,
-  
+  chartData: object[];
+  title: string;
+  description: string;
+  XAxisDataKey: string;
 }
 
-export function ChartLineLinear({chartData, title, description} : Props) {
+export function ChartLineLinear({ chartData, title, description, XAxisDataKey }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -49,16 +43,13 @@ export function ChartLineLinear({chartData, title, description} : Props) {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="day"
+              dataKey={XAxisDataKey}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Line
               dataKey="spending"
               type="linear"
@@ -70,5 +61,5 @@ export function ChartLineLinear({chartData, title, description} : Props) {
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
