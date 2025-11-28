@@ -29,6 +29,8 @@ export const categories = pgTable("categories", {
   name: varchar("name", { length: 255 }).notNull(),
   isDefault: boolean("is_default").notNull().default(false),
   description: varchar("description", { length: 1000 }),
+  icon: varchar("icon", { length: 30 }),
+  color: varchar("color", { length: 20 }),
   userId: text("user_id").references(() => users.id, {
     onDelete: "cascade",
   }),
