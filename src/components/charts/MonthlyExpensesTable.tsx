@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import {
   Card,
   CardHeader,
@@ -19,12 +20,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Edit2, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { deleteTransaction } from "../MonthlyExpenses/deleteAction";
 
 type MonthlyExpenseRow = {
   id: number | string;
-  categoryName?: string | null; // csak kiadásnál értelmes
+  categoryName?: string | null;
   description?: string | null;
-  amount: number; // bevétel > 0, kiadás < 0
+  amount: number;
   occurredAt: Date;
 };
 
@@ -40,6 +43,30 @@ export function MonthlyExpensesTable({
   const totalNet = data.reduce((sum, row) => sum + row.amount, 0);
   const totalIsIncome = totalNet >= 0;
   const totalDisplay = Math.abs(totalNet);
+
+  const router = useRouter();
+  const [isPending, startTransition] = React.useTransition();
+  const [deletingId, setDeletingId] = React.useState<number | string | null>(
+    null
+  );
+
+  async function handleDelete(id: number | string) {
+    const ok = window.confirm("Biztosan törlöd ezt a tranzakciót?");
+    if (!ok) return;
+
+    setDeletingId(id);
+
+    startTransition(async () => {
+      try {
+        await deleteTransaction(Number(id));
+        router.refresh();
+      } catch (err) {
+        console.error("Delete failed", err);
+      } finally {
+        setDeletingId(null);
+      }
+    });
+  }
 
   return (
     <Card className="w-full">
@@ -78,13 +105,15 @@ export function MonthlyExpensesTable({
                 ? "bg-emerald-50 text-emerald-700"
                 : "bg-rose-50 text-rose-700";
 
+              const isDeleting = isPending && deletingId === row.id;
+
               return (
                 <TableRow key={row.id}>
                   <TableCell className="whitespace-nowrap align-top">
                     {new Date(row.occurredAt).toLocaleDateString("hu-HU")}
                   </TableCell>
 
-                  <TableCell className="max-w-[420px] text-center align-top text-sm text-muted-foreground whitespace-normal wrap-break-word max-h-18 overflow-hidden">
+                  <TableCell className="max-w-[420px] text-center align-top text-sm text-muted-foreground whitespace-normal break-words max-h-18 overflow-hidden">
                     {row.description || "—"}
                   </TableCell>
 
@@ -115,6 +144,8 @@ export function MonthlyExpensesTable({
                         variant="outline"
                         size="icon"
                         className="border-destructive/40 text-destructive"
+                        disabled={isDeleting}
+                        onClick={() => handleDelete(row.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
