@@ -1,9 +1,14 @@
 import { ChartLineLinear } from "../ChartLineLinear";
 import { getDailySpendingsWithSpendingLimits } from "./actions";
 
-export default async function DailySpendingsChart() {
+interface Props{
+  year: number,
+  month: number
+}
 
-  const dailySpendingsWithLimits = await getDailySpendingsWithSpendingLimits(2025,11);
+export default async function DailySpendingsChart({year, month}: Props) {
+
+  const dailySpendingsWithLimits = await getDailySpendingsWithSpendingLimits(year,month);
 
   const chartData = dailySpendingsWithLimits || [];
 
