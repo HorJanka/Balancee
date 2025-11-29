@@ -1,10 +1,11 @@
 import { ChartLineLinear } from "../ChartLineLinear";
-import { getDailySpendings } from "./actions";
+import { getDailySpendingsWithSpendingLimits } from "./actions";
 
 export default async function DailySpendingsChart() {
-  const userTransactions = await getDailySpendings(2025, 11);
 
-  const chartData = userTransactions || [];
+  const dailySpendingsWithLimits = await getDailySpendingsWithSpendingLimits(2025,11);
+
+  const chartData = dailySpendingsWithLimits || [];
 
   return (
     <ChartLineLinear
@@ -12,6 +13,7 @@ export default async function DailySpendingsChart() {
       title="Napi költések"
       description="November 2025"
       XAxisDataKey="day"
+      limitDataKey="limit"
     />
   );
 }
