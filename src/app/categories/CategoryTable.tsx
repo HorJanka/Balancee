@@ -1,15 +1,12 @@
-"use server"
-
+"use client"
 import { DataTable } from "../../components/DataTable"
-import { getCategories } from "./actions"
 import { CategoryColumn, columns } from "./columns";
 
-export default async function CategoryTable() {
-    const categories = await getCategories() as CategoryColumn[];
-
+export default function CategoryTable({categories} : {categories: CategoryColumn[]}) {
+    
     return (
         <div>
-            <DataTable columns={columns} data={categories} />
+            <DataTable columns={columns} data={categories} pageSize={10} />
         </div>
     )
 }

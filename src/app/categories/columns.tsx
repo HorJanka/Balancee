@@ -1,5 +1,3 @@
-"use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../../components/ui/button";
@@ -9,9 +7,10 @@ import { DynamicIcon, IconName } from 'lucide-react/dynamic';
 export type CategoryColumn = {
     id: number,
     name: string,
-    description: string | null,
-    color: string | null,
-    icon: IconName | null
+    description: string | undefined,
+    color: string | undefined,
+    icon: IconName | undefined,
+    default: boolean
 }
 
 export const columns: ColumnDef<CategoryColumn>[] = [
@@ -21,6 +20,15 @@ export const columns: ColumnDef<CategoryColumn>[] = [
     cell: ({ row }) => {
       return (
         <DynamicIcon name={row.original.icon ?? "circle-question-mark"} />
+      );
+    }
+  },
+  {
+    accessorKey: "color",
+    header: "Szín",
+    cell: ({ row }) => {
+      return (
+        <div className="max-h-5 aspect-square rounded-sm" style={{backgroundColor: row.original.color ?? "transparent"}} />
       );
     }
   },

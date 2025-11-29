@@ -17,20 +17,25 @@ export function CategoryTableActions({ category }: { category : CategoryColumn }
 
   return (
     <>
-      <div>
-        <FormModal
-          buttonText={<Pencil />}
-          buttonVariant="ghost"
-          title="Korlát módosítása"
-          open={open}
-          setOpen={setOpen}
-        >
-          <CategoryForm />
-        </FormModal>
-        <Button variant="ghost" onClick={handleDelete}>
-          <Trash2 />
-        </Button>
-      </div>
+      {
+      (category.default) ? 
+        <></> 
+        :
+        <div>
+          <FormModal
+            buttonText={<Pencil />}
+            buttonVariant="ghost"
+            title="Kategória módosítása"
+            open={open}
+            setOpen={setOpen}
+          >
+            <CategoryForm category={category} setOpen={setOpen} />
+          </FormModal>
+          <Button variant="ghost" onClick={handleDelete}>
+            <Trash2 />
+          </Button>
+        </div>
+      }      
     </>
   );
 }
