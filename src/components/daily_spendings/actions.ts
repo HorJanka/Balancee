@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { transactions } from "@/db/schema";
-import { and, eq, gte, lt, sql } from "drizzle-orm";
+import { spendingLimit, transactions } from "@/db/schema";
+import { and, eq, gte, lt, lte, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { DateTime } from "luxon";
@@ -72,4 +72,76 @@ export async function getDailySpendings(year: number, month: number) {
     };
   });
   return dailySpendings;
+}
+
+export async function getDailySpendingLimits(year: number, month: number) {
+  // Get authenticated user
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return;
+
+  // User timezone
+  const tz = "Europe/Budapest";
+
+  // Get start and end of the month in the user's timezone
+  const startOfMonth = DateTime.fromObject({ year, month, day: 1 }, { zone: tz });
+  const endOfMonth = startOfMonth.endOf("month");
+
+  // Convert to UTC for database query
+  const startUTC = startOfMonth.toUTC().toJSDate();
+  const endUTC = endOfMonth.toUTC().toJSDate();
+
+  // Get all spending limits that overlap with the requested month
+  const limits = await db
+    .select()
+    .from(spendingLimit)
+    .where(
+      and(
+        eq(spendingLimit.userId, session.user.id),
+        lte(spendingLimit.start, endUTC),
+        gte(spendingLimit.end, startUTC),
+        eq(spendingLimit.isMonthly, false)
+      )
+    );
+
+  if (limits.length === 0) return [];
+
+  // Expand each limit into daily entries
+  const dailyLimits: Array<{ day: number; limit: number }> = [];
+
+  for (const limit of limits) {
+    const limitStart = DateTime.fromJSDate(limit.start, { zone: "utc" }).setZone(tz);
+    const limitEnd = DateTime.fromJSDate(limit.end, { zone: "utc" }).setZone(tz);
+
+    const actualStart = DateTime.max(limitStart.startOf("day"), startOfMonth);
+    const actualEnd = DateTime.min(limitEnd.startOf("day"), endOfMonth);
+
+    let currentDate = actualStart;
+    while (currentDate <= actualEnd) {
+      dailyLimits.push({ day: currentDate.day, limit: limit.limit });
+      currentDate = currentDate.plus({ days: 1 });
+    }
+  }
+
+  return dailyLimits.sort((a, b) => a.day - b.day);
+}
+
+export async function getDailySpendingsWithSpendingLimits(year: number, month: number) {
+  const dailySpending = await getDailySpendings(year, month);
+  const dailyLimits = await getDailySpendingLimits(year, month);
+
+  // Create a map of day -> limit for quick lookup
+  const limitsMap = new Map(
+    dailyLimits?.map(item => [item.day.toString(), item.limit])
+  );
+
+  // Combine the data
+  const combined = dailySpending?.map(spending => ({
+    day: spending.day,
+    spending: spending.spending,
+    limit: limitsMap.get(spending.day) || null, // null if no limit set for that day
+  }));
+
+  return combined;
 }
