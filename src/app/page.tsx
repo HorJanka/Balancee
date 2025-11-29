@@ -1,5 +1,6 @@
+import { getCategories } from "@/app/categories/actions";
 import DailySpendingsChart from "@/components/daily_spendings/DailySpendingsChart";
-import { getCategoriesSelect } from "@/app/categories/actions";
+import MonthChanger from "@/components/month_changer/MonthChanger";
 import MonthlySpendingsChart from "@/components/monthly_spendings/MonthlySpendingsChart";
 import { SpendingLimitCard } from "@/components/spending_limit/SpendingLimitCard";
 import TransactionsMenuBar from "@/components/TransactionsMenuBar";
@@ -7,7 +8,6 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { signOutAction } from "./actions/auth";
-import MonthChanger from "@/components/month_changer/MonthChanger";
 
 interface HomeProps {
   searchParams: Promise<{ year?: string; month?: string }>;
@@ -34,13 +34,12 @@ export default async function Home({ searchParams }: HomeProps) {
     <div>
       <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
         <SpendingLimitCard />
-
         <div className="flex flex-col gap-4 justify-center">
           <div className="flex justify-center">
             <MonthChanger />
           </div>
           <DailySpendingsChart year={year} month={month} />
-          <MonthlySpendingsChart year={year}/>
+          <MonthlySpendingsChart year={year} />
         </div>
         Welcome
         <form action={signOutAction}>
