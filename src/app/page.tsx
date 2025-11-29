@@ -1,5 +1,5 @@
 import DailySpendingsChart from "@/components/daily_spendings/DailySpendingsChart";
-import { getCategories } from "@/components/modal_forms/send";
+import { getCategoriesSelect } from "@/app/categories/actions";
 import MonthlySpendingsChart from "@/components/monthly_spendings/MonthlySpendingsChart";
 import { SpendingLimitCard } from "@/components/spending_limit/SpendingLimitCard";
 import TransactionsMenuBar from "@/components/TransactionsMenuBar";
