@@ -10,10 +10,15 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
+
 const chartConfig = {
   spending: {
     label: "Költés",
     color: "var(--primary)",
+  },
+  limit: {
+    label: "Korlát",
+    color: "var(--destructive)", // Red color
   },
 } satisfies ChartConfig;
 
@@ -22,9 +27,10 @@ interface Props {
   title: string;
   description: string;
   XAxisDataKey: string;
+  limitDataKey?: string
 }
 
-export function ChartLineLinear({ chartData, title, description, XAxisDataKey }: Props) {
+export function ChartLineLinear({ chartData, title, description, XAxisDataKey, limitDataKey = "limit" }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -56,6 +62,14 @@ export function ChartLineLinear({ chartData, title, description, XAxisDataKey }:
               stroke="var(--color-spending)"
               strokeWidth={2}
               dot={false}
+            />
+            <Line
+              dataKey={limitDataKey}
+              type="linear"
+              stroke="var(--color-limit)"
+              strokeWidth={2}
+              dot={false}
+              connectNulls={false} // Set to true if you want to connect across gaps
             />
           </LineChart>
         </ChartContainer>
