@@ -1,17 +1,29 @@
+import { DateTime } from "luxon";
 import { ChartLineLinear } from "../ChartLineLinear";
-import { getDailySpendings } from "./actions";
+import { getDailySpendingsWithSpendingLimits } from "./actions";
 
-export default async function DailySpendingsChart() {
-  const userTransactions = await getDailySpendings(2025, 11);
+interface Props{
+  year: number,
+  month: number
+}
 
-  const chartData = userTransactions || [];
+export default async function DailySpendingsChart({year, month}: Props) {
+
+  const dailySpendingsWithLimits = await getDailySpendingsWithSpendingLimits(year,month);
+
+  const chartData = dailySpendingsWithLimits || [];
+
+  const description = DateTime.fromObject({ year, month })
+    .setLocale('hu')
+    .toFormat('yyyy LLLL'); // e.g., "november 2025"
 
   return (
     <ChartLineLinear
       chartData={chartData}
       title="Napi költések"
-      description="November 2025"
+      description={description}
       XAxisDataKey="day"
+      limitDataKey="limit"
     />
   );
 }

@@ -1,8 +1,11 @@
 import { ChartLineLinear } from "../ChartLineLinear";
 import { getMonthlySpendings } from "./actions";
 
-export default async function MonthlySpendingsChart() {
-  const year = new Date().getFullYear();
+interface Props{
+  year: number
+}
+
+export default async function MonthlySpendingsChart({year}:Props) {
   const userTransactions = await getMonthlySpendings(year);
 
   const chartData = userTransactions || [];
@@ -11,7 +14,7 @@ export default async function MonthlySpendingsChart() {
     <ChartLineLinear
       chartData={chartData}
       title="Havi költések"
-      description="2025"
+      description={year.toString()}
       XAxisDataKey="month"
     />
   );
