@@ -37,6 +37,7 @@ export async function saveIncome(formData : IncomeState) {
     }
 
     revalidatePath("/monthlyIncome");
+    revalidatePath("/statistics");
 }
 
 export async function saveExpense(formData : ExpenseState) {
@@ -58,4 +59,5 @@ export async function saveExpense(formData : ExpenseState) {
     
     // Revalidate the page to refresh the charts
     revalidatePath("/");
+    revalidatePath("/statistics");
 }
