@@ -1,4 +1,4 @@
-import { ChartNoAxesColumn, SlidersHorizontal, Tag } from "lucide-react";
+import { BanknoteArrowDown, ChartNoAxesColumn, SlidersHorizontal, Tag } from "lucide-react";
 import Link from "next/link";
 
 import { ReactNode } from "react";
@@ -32,6 +32,11 @@ const menuItems: MenuItem[] = [
     name: "Statisztikák",
     href: "/statistics",
     icon: <ChartNoAxesColumn className="mr-2 hover:text-primary-foreground" />,
+  },
+  {
+    name: "Rendszeres bevétel",
+    href: "/fixed-income",
+    icon: <BanknoteArrowDown className="mr-2 hover:text-primary-foreground" />,
   },
 ];
 

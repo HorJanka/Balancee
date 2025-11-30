@@ -35,6 +35,8 @@ export async function saveIncome(formData : IncomeState) {
                 description: formData.description
             });
     }
+
+    revalidatePath("/monthlyIncome");
 }
 
 export async function saveExpense(formData : ExpenseState) {
