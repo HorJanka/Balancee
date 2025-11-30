@@ -7,7 +7,7 @@ export async function SpendingLimitsLayout() {
   const monthlyLimits = await getSpendingLimitsByIsMonthly(true);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-6 w-full mt-8">
+    <div className="flex flex-col items-center justify-center gap-6 w-full">
       <div className="w-full max-w-3xl">
         <DailySpendingLimits data={dailyLimits || []} />
       </div>
