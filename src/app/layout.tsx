@@ -27,7 +27,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className="flex flex-col h-screen">
         {session && (
-          <header className="sticky top-0 bg-muted h-fit px-6 py-4 w-full">
+          <header className="sticky top-0 bg-linear-to-br from-green-50 to-lime-100 h-fit px-6 py-4 w-full">
             <MenuBar />
           </header>
         )}
@@ -35,7 +35,7 @@ export default async function RootLayout({
         <main className={cn("flex-1 overflow-auto", session && "py-6")}>{children}</main>
 
         {session && (
-          <footer className="sticky bottom-0 bg-muted h-fit px-6 py-4 w-full flex gap-4">
+          <footer className="sticky bottom-0 bg-linear-to-br from-green-50 to-lime-100 h-fit px-6 py-4 w-full flex gap-4">
             <TransactionsMenuBar categories={categories} />
           </footer>
         )}
