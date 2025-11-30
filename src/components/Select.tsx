@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,18 +12,30 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
-export function Select({data, notFound, placeholder, name,  setSelected} : {data : {id : string | number, name : string}[], notFound : string, placeholder : string, name : string, setSelected : (value : number | string | undefined) => void,}) {
-
+export function Select({
+  data,
+  notFound,
+  placeholder,
+  name,
+  setSelected,
+  value,
+}: {
+  data: { id: string | number; name: string }[];
+  notFound: string;
+  placeholder: string;
+  name: string;
+  setSelected: (value: number | string | undefined) => void;
+  value: number | string;
+}) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
- 
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -34,9 +46,7 @@ export function Select({data, notFound, placeholder, name,  setSelected} : {data
           className="w-[200px] justify-between"
           name={name}
         >
-          {value
-            ? data.find((dat) => dat?.name === value)?.name
-            : placeholder}
+          {value ? data.find((dat) => dat?.id === value)?.name : placeholder}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -51,8 +61,7 @@ export function Select({data, notFound, placeholder, name,  setSelected} : {data
                   key={dat?.id}
                   value={dat?.name}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setSelected((currentValue === value ? undefined : dat?.id));
+                    setSelected(currentValue === value ? undefined : dat?.id);
                     setOpen(false);
                   }}
                 >
@@ -70,5 +79,5 @@ export function Select({data, notFound, placeholder, name,  setSelected} : {data
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

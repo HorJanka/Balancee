@@ -25,6 +25,7 @@ export async function getMonthlyCategorySpendings(year: number, month: number) {
         COALESCE(${categories.name}, 'Uncategorized')
       `.as("category"),
       value: sql<number>`SUM(-${transactions.amount})`.as("value"),
+      color: categories.color,
     })
     .from(transactions)
     .leftJoin(categories, eq(categories.id, transactions.categoryId))
@@ -39,11 +40,10 @@ export async function getMonthlyCategorySpendings(year: number, month: number) {
     .groupBy(categories.id, categories.name)
     .orderBy(sql`SUM(-${transactions.amount}) DESC`);
 
-  console.log("QUERY RESULT:", result);
-
   return result.map((r) => ({
     categoryId: r.categoryId,
     category: r.category,
     value: Number(r.value) || 0,
+    color: r.color ?? "#888888",
   }));
 }

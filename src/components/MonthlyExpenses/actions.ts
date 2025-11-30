@@ -29,11 +29,13 @@ export async function getMonthlyExpenses(year: number, month: number) {
     .select({
       id: transactions.id,
       categoryName: sql<string>`
-        COALESCE(${categories.name}, 'Uncategorized')
+        COALESCE(${categories.name}, 'Egyéb')
       `.as("category_name"),
       description: transactions.description,
       amount: transactions.amount,
       occurredAt: transactions.occurredAt,
+      categoryColor: categories.color,
+      categoryId: categories.id,
     })
     .from(transactions)
     .leftJoin(categories, eq(categories.id, transactions.categoryId))
@@ -52,6 +54,8 @@ export async function getMonthlyExpenses(year: number, month: number) {
     description: r.description,
     amount: Number(r.amount),
     occurredAt: new Date(r.occurredAt),
+    categoryColor: r.categoryColor,
+    categoryId: r.categoryId,
   }));
 }
 

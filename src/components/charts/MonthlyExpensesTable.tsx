@@ -35,6 +35,7 @@ type MonthlyExpenseRow = {
   description?: string | null;
   amount: number;
   occurredAt: Date | string;
+  categoryColor?: string | null;
 };
 
 export function MonthlyExpensesTable({
@@ -104,8 +105,7 @@ export function MonthlyExpensesTable({
             {subtitle && <CardDescription>{subtitle}</CardDescription>}
           </div>
         </CardHeader>
-        <CardContent>
-          {/* scroll mobilon, hogy ne törjön szét a layout */}
+        <CardContent className="min-h-[100px] min-w-[350px] md:min-h-[100px] md:min-w-[1000px] max-w-screen">
           <div className="w-full overflow-x-auto">
             <Table>
               <TableCaption>Az adott hónap bevételei és kiadásai.</TableCaption>
@@ -159,7 +159,14 @@ export function MonthlyExpensesTable({
                             —
                           </span>
                         ) : (
-                          <Badge variant="outline">
+                          <Badge
+                            variant="outline"
+                            className="bg-[unset]"
+                            style={{
+                              backgroundColor: row.categoryColor ?? "#888888",
+                              color: "white",
+                            }}
+                          >
                             {row.categoryName || "Egyéb"}
                           </Badge>
                         )}

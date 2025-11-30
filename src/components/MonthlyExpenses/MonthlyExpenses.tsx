@@ -3,11 +3,12 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { MonthlyExpensesTable } from "../charts/MonthlyExpensesTable";
 
-export default async function MonthlyExpensesPage() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+interface Props {
+  year: number;
+  month: number;
+}
 
+export default async function MonthlyExpensesPage({ year, month }: Props) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
     return [];

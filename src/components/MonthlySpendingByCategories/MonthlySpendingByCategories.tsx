@@ -1,11 +1,12 @@
 import { getMonthlyCategorySpendings } from "./actions";
 import { MonthlyCategoryPie } from "../charts/MonthlyCategoryPie";
 
-export default async function MonthlyCategoryPage() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+interface Props {
+  year: number;
+  month: number;
+}
 
+export default async function MonthlyCategoryPage({ year, month }: Props) {
   const data = await getMonthlyCategorySpendings(year, month);
 
   return (

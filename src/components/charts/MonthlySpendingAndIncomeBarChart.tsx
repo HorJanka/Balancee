@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/chart";
 
 type MonthlyRow = {
-  month: number; // 1–12
+  month: number;
   income: number;
   expense: number;
   balance: number;
@@ -77,7 +77,7 @@ export function MonthlySpendingAndIncomeBarChart({ data, year }: Props) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1">
+      <CardContent className="min-h-[100px] min-w-[350px] md:min-h-[100px] md:min-w-[1000px] max-w-screen">
         <div className="h-[260px] w-full sm:h-[320px] md:h-[360px]">
           <ChartContainer config={chartConfig} className="h-full w-full">
             <BarChart accessibilityLayer data={chartData}>
@@ -125,7 +125,9 @@ export function MonthlySpendingAndIncomeBarChart({ data, year }: Props) {
           className="flex min-w-[150px] flex-1 flex-col rounded-lg border p-3"
           style={{ borderColor: "var(--chart-balance)" }}
         >
-          <span className="text-xs text-muted-foreground">Éves maradék</span>
+          <span className="text-xs text-muted-foreground">
+            Éves megtakarítás
+          </span>
           <span className="font-semibold">
             {totalBalance.toLocaleString("hu-HU")} Ft
           </span>

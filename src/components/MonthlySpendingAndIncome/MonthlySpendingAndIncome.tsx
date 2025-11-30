@@ -1,10 +1,11 @@
 import { getMonthlySummary } from "./actions";
 import { MonthlySpendingAndIncomeBarChart } from "../charts/MonthlySpendingAndIncomeBarChart";
 
-export default async function YearlySummaryPage() {
-  const now = new Date();
-  const year = now.getFullYear();
+interface Props {
+  year: number;
+}
 
+export default async function YearlySummaryPage({ year }: Props) {
   const data = await getMonthlySummary(year);
 
   return (

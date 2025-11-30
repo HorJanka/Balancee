@@ -16,6 +16,7 @@ import styles from "./forms.module.css";
 import { DateTime } from "luxon";
 import { useRouter } from "next/navigation";
 import { updateExpenseAction } from "../MonthlyExpenses/actions";
+import { handleInputChange } from "./helpers";
 
 type EditIncomeFormProps = {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -29,7 +30,7 @@ type EditIncomeFormProps = {
 
 type IncomeFormState = {
   amount: string;
-  description?: string;
+  description: string;
   date?: Date;
 };
 
@@ -38,6 +39,28 @@ type IncomeFormErrors = {
   description: string;
   no: number;
 };
+
+function validateIncome(formData: IncomeFormState): IncomeFormErrors {
+  const errors: IncomeFormErrors = {
+    amount: "",
+    description: "",
+    no: 0,
+  };
+
+  const value = Number(formData.amount);
+
+  if (!formData.amount || isNaN(value) || value <= 0) {
+    errors.amount = "Az összegnek pozitív számnak kell lennie.";
+    errors.no++;
+  }
+
+  if (formData.description && formData.description.length > 500) {
+    errors.description = "A leírás legfeljebb 500 karakter lehet.";
+    errors.no++;
+  }
+
+  return errors;
+}
 
 export function EditIncomeForm({
   setOpen,
@@ -48,7 +71,7 @@ export function EditIncomeForm({
   const [formData, setFormData] = useState<IncomeFormState>({
     amount: Math.abs(initial.amount).toString(),
     description: initial.description ?? "",
-    date: undefined,
+    date: initial.occurredAt ? new Date(initial.occurredAt) : undefined,
   });
 
   const [formErrors, setFormErrors] = useState<IncomeFormErrors>({
@@ -59,32 +82,10 @@ export function EditIncomeForm({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function validate(): IncomeFormErrors {
-    const errors: IncomeFormErrors = {
-      amount: "",
-      description: "",
-      no: 0,
-    };
-
-    const value = Number(formData.amount);
-
-    if (!formData.amount || isNaN(value) || value <= 0) {
-      errors.amount = "Az összegnek pozitív számnak kell lennie.";
-      errors.no++;
-    }
-
-    if (formData.description && formData.description.length > 500) {
-      errors.description = "A leírás legfeljebb 500 karakter lehet.";
-      errors.no++;
-    }
-
-    return errors;
-  }
-
   async function handleSubmit(e: FormEvent<HTMLElement>) {
     e.preventDefault();
 
-    const errors = validate();
+    const errors = validateIncome(formData);
     setFormErrors(errors);
     if (errors.no > 0) return;
 
@@ -113,7 +114,7 @@ export function EditIncomeForm({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="w-full max-w-[36rem] space-y-4">
       <div className={styles.field}>
         <Label htmlFor="amount" className={styles.label}>
           Összeg:
@@ -122,11 +123,11 @@ export function EditIncomeForm({
         <Input
           type="number"
           name="amount"
+          inputMode="decimal"
+          min={0}
           className={styles.input}
           value={formData.amount}
-          onChange={(e) =>
-            setFormData((prev) => ({ ...prev, amount: e.target.value }))
-          }
+          onChange={(e) => handleInputChange(e, setFormData)}
         />
       </div>
 
@@ -135,15 +136,13 @@ export function EditIncomeForm({
           Leírás:
         </Label>
         <p className={styles.error}>{formErrors.description}</p>
-        <div className="flex max-w-[35rem] flex-col">
+        <div className="flex w-full max-w-[35rem] flex-col">
           <Textarea
             name="description"
             className={styles.textarea}
             maxLength={500}
-            value={formData.description}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, description: e.target.value }))
-            }
+            value={formData.description ?? ""}
+            onChange={(e) => handleInputChange(e, setFormData)}
           />
           <p className="self-end text-xs text-secondary-foreground">
             {500 - (formData.description?.length ?? 0)}
@@ -167,7 +166,7 @@ export function EditIncomeForm({
         variant="default"
         type="submit"
         disabled={isSubmitting}
-        className="mt-4"
+        className="mt-4 w-full sm:w-auto"
       >
         Mentés
       </Button>

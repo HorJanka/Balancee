@@ -46,7 +46,7 @@ export function EditExpenseForm({
   const [formData, setFormData] = useState<ExpenseState>({
     amount: Math.abs(initial.amount).toString(),
     category: initial.categoryId ?? undefined,
-    description: initial.description ?? undefined,
+    description: initial.description ?? "",
     other: true,
     date: initial.occurredAt ? new Date(initial.occurredAt) : undefined,
   });
@@ -84,7 +84,7 @@ export function EditExpenseForm({
       id: Number(initial.id),
       amount: signedAmount,
       categoryId: sendData.category ?? null,
-      description: sendData.description ?? null,
+      description: sendData.description || null,
       occurredAt,
     });
 
@@ -94,7 +94,7 @@ export function EditExpenseForm({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="w-full max-w-[36rem] space-y-4">
       <div className={styles.field}>
         <Label htmlFor="amount" className={styles.label}>
           Összeg:
@@ -103,6 +103,8 @@ export function EditExpenseForm({
         <Input
           type="number"
           name="amount"
+          inputMode="decimal"
+          min={0}
           className={styles.input}
           value={formData.amount}
           onChange={(e) => handleInputChange(e, setFormData)}
@@ -119,13 +121,14 @@ export function EditExpenseForm({
           data={categories}
           notFound="Nincs ilyen kategória"
           placeholder="Válassz kategóriát"
-          setSelected={(selected) =>
+          value={formData.category ?? ""}
+          setSelected={(selected) => {
             setState(
               "category",
               selected ? parseInt(selected.toString()) : undefined,
               setFormData
-            )
-          }
+            );
+          }}
         />
       </div>
 
@@ -134,12 +137,12 @@ export function EditExpenseForm({
           Leírás:
         </Label>
         <p className={styles.error}>{formErrors.description}</p>
-        <div className="flex max-w-[35rem] flex-col">
+        <div className="flex w-full max-w-[35rem] flex-col">
           <Textarea
             name="description"
             className={styles.textarea}
             maxLength={500}
-            value={formData.description}
+            value={formData.description ?? ""}
             onChange={(e) => handleInputChange(e, setFormData)}
           />
           <p className="self-end text-xs text-secondary-foreground">
@@ -149,17 +152,15 @@ export function EditExpenseForm({
       </div>
 
       <div className={styles.field}>
-        <div className="mb-3 flex items-center gap-3">
-          <Label htmlFor="date">Dátum módosítása</Label>
-        </div>
-        <p hidden={!formData.other} className={styles.error}>
-          {formErrors.date}
-        </p>
+        <Label htmlFor="date" className={styles.label}>
+          Dátum:
+        </Label>
+        <p className={styles.error}>{formErrors.date}</p>
         <DatePicker
-          hidden={!formData.other}
+          hidden={false}
           placeholder="Válassz dátumot"
           date={formData.date}
-          onSelect={(date) => setState("date", date, setFormData)}
+          onSelect={(date) => setState("date", date ?? undefined, setFormData)}
         />
       </div>
 
@@ -167,7 +168,7 @@ export function EditExpenseForm({
         variant="default"
         type="submit"
         disabled={isSubmitting}
-        className="mt-4"
+        className="mt-4 w-full sm:w-auto"
       >
         Mentés
       </Button>

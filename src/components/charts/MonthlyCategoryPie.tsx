@@ -25,22 +25,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const PALETTE = [
-  "var(--chart-1)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-  "var(--chart-4)",
-  "var(--chart-5)",
-  "var(--chart-6)",
-  "var(--chart-7)",
-  "var(--chart-8)",
-];
-
 type Slice = {
   categoryId: number | null;
   category: string;
   value: number;
-  fill?: string;
+  color: string;
 };
 
 export function MonthlyCategoryPie({
@@ -52,48 +41,33 @@ export function MonthlyCategoryPie({
   title?: string;
   subtitle?: string;
 }) {
-  const colored = React.useMemo<Slice[]>(
-    () =>
-      (data ?? []).map((d, i) => ({
-        ...d,
-        fill: PALETTE[i % PALETTE.length],
-      })),
-    [data]
-  );
-
-  const [activeKey, setActiveKey] = React.useState(colored[0]?.category ?? "");
+  const [activeKey, setActiveKey] = React.useState(data[0]?.category ?? "");
 
   const activeIndex = React.useMemo(
-    () => colored.findIndex((s) => s.category === activeKey),
-    [activeKey, colored]
+    () => data.findIndex((s) => s.category === activeKey),
+    [activeKey, data]
   );
 
   const chartConfig = React.useMemo<ChartConfig>(() => {
     const entries = Object.fromEntries(
-      colored.map((s) => [
-        s.category,
-        { label: s.category, color: s.fill || "var(--chart-1)" },
-      ])
+      data.map((s) => [s.category, { label: s.category, color: s.color }])
     );
     return entries as ChartConfig;
-  }, [colored]);
+  }, [data]);
 
-  const categories = React.useMemo(
-    () => colored.map((s) => s.category),
-    [colored]
-  );
+  const categories = React.useMemo(() => data.map((s) => s.category), [data]);
 
   const id = "monthly-category-pie";
-  const total = colored.reduce((acc, s) => acc + s.value, 0);
+  const total = data.reduce((acc, s) => acc + s.value, 0);
 
-  if (!colored.length) {
+  if (!data.length) {
     return (
-      <Card className="flex h-full w-full flex-col">
+      <Card className="flex h-full flex-col">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           {subtitle && <CardDescription>{subtitle}</CardDescription>}
         </CardHeader>
-        <CardContent className="pb-4 text-sm text-muted-foreground">
+        <CardContent className="min-h-[100px] min-w-[350px] md:min-h-[100px] md:min-w-[1000px] max-w-screen">
           Nincs adat a megadott időszakra.
         </CardContent>
       </Card>
@@ -101,7 +75,7 @@ export function MonthlyCategoryPie({
   }
 
   return (
-    <Card data-chart={id} className="flex h-full w-full flex-col">
+    <Card data-chart={id} className="flex h-full flex-col">
       <ChartStyle id={id} config={chartConfig} />
 
       <CardHeader className="flex flex-col items-start gap-3 pb-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
@@ -139,7 +113,7 @@ export function MonthlyCategoryPie({
         )}
       </CardHeader>
 
-      <CardContent className="flex flex-1 items-center justify-center pb-4">
+      <CardContent className="min-h-[100px] min-w-[350px] md:min-h-[100px] md:min-w-[1000px] max-w-screen">
         <div className="mx-auto w-full max-w-md sm:max-w-lg">
           <ChartContainer
             id={id}
@@ -152,7 +126,7 @@ export function MonthlyCategoryPie({
                 content={<ChartTooltipContent hideLabel />}
               />
               <Pie
-                data={colored}
+                data={data.map((value) => ({ ...value, fill: value.color }))}
                 dataKey="value"
                 nameKey="category"
                 innerRadius={60}
@@ -176,9 +150,9 @@ export function MonthlyCategoryPie({
                   content={({ viewBox }) => {
                     if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                       const value =
-                        colored[
-                          Math.max(activeIndex, 0)
-                        ]?.value?.toLocaleString("hu-HU") ?? "0";
+                        data[Math.max(activeIndex, 0)]?.value?.toLocaleString(
+                          "hu-HU"
+                        ) ?? "0";
 
                       return (
                         <text
