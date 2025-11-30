@@ -1,12 +1,23 @@
 import DailySpendingsChart from "@/components/daily_spendings/DailySpendingsChart";
 import MonthChanger from "@/components/month_changer/MonthChanger";
 import MonthlySpendingsChart from "@/components/monthly_spendings/MonthlySpendingsChart";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 interface StatisticsProps {
   searchParams: Promise<{ year?: string; month?: string }>;
 }
 
 export default async function StatisticsPage({ searchParams }: StatisticsProps) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    return redirect("/sign-in");
+  }
+
   const params = await searchParams;
 
   // Default to current date if no search params
