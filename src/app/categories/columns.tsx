@@ -1,36 +1,37 @@
+import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { Button } from "../../components/ui/button";
+import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { CategoryTableActions } from "./CategoryTableActions";
-import { DynamicIcon, IconName } from 'lucide-react/dynamic';
 
 export type CategoryColumn = {
-    id: number,
-    name: string,
-    description: string | undefined,
-    color: string | undefined,
-    icon: IconName | undefined,
-    default: boolean
-}
+  id: number;
+  name: string;
+  description: string | undefined;
+  color: string | undefined;
+  icon: IconName | undefined;
+  default: boolean;
+};
 
 export const columns: ColumnDef<CategoryColumn>[] = [
   {
     accessorKey: "icon",
     header: "Ikon",
     cell: ({ row }) => {
-      return (
-        <DynamicIcon name={row.original.icon ?? "circle-question-mark"} />
-      );
-    }
+      return <DynamicIcon name={row.original.icon ?? "circle-question-mark"} />;
+    },
   },
   {
     accessorKey: "color",
     header: "Szín",
     cell: ({ row }) => {
       return (
-        <div className="max-h-5 aspect-square rounded-sm" style={{backgroundColor: row.original.color ?? "transparent"}} />
+        <div
+          className="max-h-5 aspect-square rounded-sm"
+          style={{ backgroundColor: row.original.color ?? "transparent" }}
+        />
       );
-    }
+    },
   },
   {
     accessorKey: "name",
@@ -45,8 +46,8 @@ export const columns: ColumnDef<CategoryColumn>[] = [
         </Button>
       );
     },
-    filterFn: 'includesString',
-    enableColumnFilter: true
+    filterFn: "includesString",
+    enableColumnFilter: true,
   },
   {
     accessorKey: "description",
@@ -61,8 +62,8 @@ export const columns: ColumnDef<CategoryColumn>[] = [
         </Button>
       );
     },
-    filterFn: 'includesString',
-    enableColumnFilter: true
+    filterFn: "includesString",
+    enableColumnFilter: true,
   },
   {
     id: "actions",

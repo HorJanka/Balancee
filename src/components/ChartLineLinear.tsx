@@ -10,7 +10,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-
 const chartConfig = {
   spending: {
     label: "Költés",
@@ -27,18 +26,24 @@ interface Props {
   title: string;
   description: string;
   XAxisDataKey: string;
-  limitDataKey?: string
+  limitDataKey?: string;
 }
 
-export function ChartLineLinear({ chartData, title, description, XAxisDataKey, limitDataKey = "limit" }: Props) {
+export function ChartLineLinear({
+  chartData,
+  title,
+  description,
+  XAxisDataKey,
+  limitDataKey = "limit",
+}: Props) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-128">
+      <CardContent className="min-h-[100px] min-w-[350px] md:min-h-[100px] md:min-w-[1000px]">
+        <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
             data={chartData}
@@ -53,6 +58,8 @@ export function ChartLineLinear({ chartData, title, description, XAxisDataKey, l
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              interval="preserveStartEnd"
+              
               tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
