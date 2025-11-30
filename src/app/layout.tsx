@@ -31,7 +31,7 @@ export default async function RootLayout({
           </header>
         )}
 
-        <main className="flex-1 overflow-auto py-4">{children}</main>
+        <main className="flex-1 overflow-auto py-6">{children}</main>
 
         {session && (
           <footer className="sticky bottom-0 bg-muted h-fit px-6 py-4 w-full flex gap-4">
