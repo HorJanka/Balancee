@@ -9,7 +9,7 @@ export default async function MonthlyCategoryPage() {
   const data = await getMonthlyCategorySpendings(year, month);
 
   return (
-    <div className="p-4">
+    <div>
       <MonthlyCategoryPie
         data={data}
         title="Havi költések kategóriánként"

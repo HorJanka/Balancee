@@ -8,7 +8,7 @@ export default async function YearlySummaryPage() {
   const data = await getMonthlySummary(year);
 
   return (
-    <div className="p-4">
+    <div>
       <MonthlySpendingAndIncomeBarChart data={data} year={year} />
     </div>
   );

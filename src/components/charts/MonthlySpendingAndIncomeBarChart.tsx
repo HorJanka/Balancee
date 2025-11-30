@@ -1,7 +1,6 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -70,37 +69,41 @@ export function MonthlySpendingAndIncomeBarChart({ data, year }: Props) {
   const totalBalance = data.reduce((acc, r) => acc + r.balance, 0);
 
   return (
-    <Card>
+    <Card className="flex h-full w-full flex-col">
       <CardHeader>
-        <CardTitle>Éves összesítés</CardTitle>
-        <CardDescription>{year}</CardDescription>
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle>Éves összesítés</CardTitle>
+          <CardDescription>{year}</CardDescription>
+        </div>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="monthLabel"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
-            <Bar dataKey="income" fill="var(--color-income)" radius={4} />
-            <Bar dataKey="expense" fill="var(--color-expense)" radius={4} />
-            <Bar dataKey="balance" fill="var(--color-balance)" radius={4} />
-          </BarChart>
-        </ChartContainer>
+
+      <CardContent className="flex-1">
+        <div className="h-[260px] w-full sm:h-[320px] md:h-[360px]">
+          <ChartContainer config={chartConfig} className="h-full w-full">
+            <BarChart accessibilityLayer data={chartData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="monthLabel"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="dashed" />}
+              />
+              <Bar dataKey="income" fill="var(--color-income)" radius={4} />
+              <Bar dataKey="expense" fill="var(--color-expense)" radius={4} />
+              <Bar dataKey="balance" fill="var(--color-balance)" radius={4} />
+            </BarChart>
+          </ChartContainer>
+        </div>
       </CardContent>
-      <CardFooter className="flex gap-4 flex-wrap text-sm">
+
+      <CardFooter className="flex flex-wrap gap-3 text-sm">
         <div
-          className="flex flex-col p-3 rounded-lg border"
-          style={{
-            borderColor: "var(--chart-income)",
-          }}
+          className="flex min-w-[150px] flex-1 flex-col rounded-lg border p-3"
+          style={{ borderColor: "var(--chart-income)" }}
         >
           <span className="text-xs text-muted-foreground">Összes bevétel</span>
           <span className="font-semibold">
@@ -109,10 +112,8 @@ export function MonthlySpendingAndIncomeBarChart({ data, year }: Props) {
         </div>
 
         <div
-          className="flex flex-col p-3 rounded-lg border"
-          style={{
-            borderColor: "var(--chart-expense)",
-          }}
+          className="flex min-w-[150px] flex-1 flex-col rounded-lg border p-3"
+          style={{ borderColor: "var(--chart-expense)" }}
         >
           <span className="text-xs text-muted-foreground">Összes kiadás</span>
           <span className="font-semibold">
@@ -121,10 +122,8 @@ export function MonthlySpendingAndIncomeBarChart({ data, year }: Props) {
         </div>
 
         <div
-          className="flex flex-col p-3 rounded-lg border"
-          style={{
-            borderColor: "var(--chart-balance)",
-          }}
+          className="flex min-w-[150px] flex-1 flex-col rounded-lg border p-3"
+          style={{ borderColor: "var(--chart-balance)" }}
         >
           <span className="text-xs text-muted-foreground">Éves maradék</span>
           <span className="font-semibold">

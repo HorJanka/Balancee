@@ -99,115 +99,129 @@ export function MonthlyExpensesTable({
     <>
       <Card className="w-full">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          {subtitle && <CardDescription>{subtitle}</CardDescription>}
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <CardTitle>{title}</CardTitle>
+            {subtitle && <CardDescription>{subtitle}</CardDescription>}
+          </div>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableCaption>Az adott hónap bevételei és kiadásai.</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Dátum</TableHead>
-                <TableHead>Leírás</TableHead>
-                <TableHead>Kategória</TableHead>
-                <TableHead className="text-right">Összeg</TableHead>
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {safeData.length === 0 && (
+          {/* scroll mobilon, hogy ne törjön szét a layout */}
+          <div className="w-full overflow-x-auto">
+            <Table>
+              <TableCaption>Az adott hónap bevételei és kiadásai.</TableCaption>
+              <TableHeader>
                 <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="py-8 text-center text-sm text-muted-foreground"
-                  >
-                    Nincs tranzakció ebben a hónapban.
-                  </TableCell>
+                  <TableHead className="whitespace-nowrap">Dátum</TableHead>
+                  <TableHead>Leírás</TableHead>
+                  <TableHead>Kategória</TableHead>
+                  <TableHead className="whitespace-nowrap text-right">
+                    Összeg
+                  </TableHead>
+                  <TableHead className="w-[1%] whitespace-nowrap text-right">
+                    Akciók
+                  </TableHead>
                 </TableRow>
-              )}
-
-              {safeData.map((row) => {
-                const isIncome = row.amount > 0;
-                const displayAmount = Math.abs(row.amount);
-                const amountBg = isIncome
-                  ? "bg-emerald-50 text-emerald-700"
-                  : "bg-rose-50 text-rose-700";
-
-                const isDeleting = isPending && deletingId === row.id;
-
-                return (
-                  <TableRow key={row.id}>
-                    <TableCell className="whitespace-nowrap align-top">
-                      {new Date(row.occurredAt).toLocaleDateString("hu-HU")}
-                    </TableCell>
-
-                    <TableCell className="max-w-[420px] text-center align-top text-sm text-muted-foreground whitespace-normal break-words max-h-18 overflow-hidden">
-                      {row.description || "—"}
-                    </TableCell>
-
-                    <TableCell className="align-top">
-                      {isIncome ? (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      ) : (
-                        <Badge variant="outline">
-                          {row.categoryName || "Egyéb"}
-                        </Badge>
-                      )}
-                    </TableCell>
-
-                    <TableCell className="text-right align-top">
-                      <span
-                        className={`inline-flex items-center justify-end rounded-md px-2 py-1 text-xs font-semibold ${amountBg}`}
-                      >
-                        {displayAmount.toLocaleString("hu-HU")} Ft
-                      </span>
-                    </TableCell>
-
-                    <TableCell className="text-right align-top">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleEdit(row)}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="border-destructive/40 text-destructive"
-                          disabled={isDeleting}
-                          onClick={() => handleDelete(row.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+              </TableHeader>
+              <TableBody>
+                {safeData.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="py-8 text-center text-sm text-muted-foreground"
+                    >
+                      Nincs tranzakció ebben a hónapban.
                     </TableCell>
                   </TableRow>
-                );
-              })}
+                )}
 
-              {safeData.length > 0 && (
-                <TableRow className="border-t-2 border-border">
-                  <TableCell colSpan={3} className="text-right font-medium">
-                    Havi egyenleg összesen:
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <span
-                      className={`inline-flex items-center justify-end rounded-md px-2 py-1 text-xs font-semibold ${
-                        totalIsIncome
-                          ? "bg-emerald-50 text-emerald-700"
-                          : "bg-rose-50 text-rose-700"
-                      }`}
+                {safeData.map((row) => {
+                  const isIncome = row.amount > 0;
+                  const displayAmount = Math.abs(row.amount);
+                  const amountBg = isIncome
+                    ? "bg-emerald-50 text-emerald-700"
+                    : "bg-rose-50 text-rose-700";
+
+                  const isDeleting = isPending && deletingId === row.id;
+
+                  return (
+                    <TableRow key={row.id}>
+                      <TableCell className="whitespace-nowrap align-top text-xs sm:text-sm">
+                        {new Date(row.occurredAt).toLocaleDateString("hu-HU")}
+                      </TableCell>
+
+                      <TableCell className="max-w-[420px] align-top text-xs text-muted-foreground sm:text-sm whitespace-normal break-words">
+                        {row.description || "—"}
+                      </TableCell>
+
+                      <TableCell className="align-top">
+                        {isIncome ? (
+                          <span className="text-xs text-muted-foreground">
+                            —
+                          </span>
+                        ) : (
+                          <Badge variant="outline">
+                            {row.categoryName || "Egyéb"}
+                          </Badge>
+                        )}
+                      </TableCell>
+
+                      <TableCell className="text-right align-top">
+                        <span
+                          className={`inline-flex items-center justify-end rounded-md px-2 py-1 text-xs font-semibold ${amountBg}`}
+                        >
+                          {displayAmount.toLocaleString("hu-HU")} Ft
+                        </span>
+                      </TableCell>
+
+                      <TableCell className="text-right align-top">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleEdit(row)}
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="border-destructive/40 text-destructive"
+                            disabled={isDeleting}
+                            onClick={() => handleDelete(row.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+
+                {safeData.length > 0 && (
+                  <TableRow className="border-t-2 border-border">
+                    <TableCell
+                      colSpan={3}
+                      className="text-right text-sm font-medium"
                     >
-                      {totalDisplay.toLocaleString("hu-HU")} Ft
-                    </span>
-                  </TableCell>
-                  <TableCell />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                      Havi egyenleg összesen:
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <span
+                        className={`inline-flex items-center justify-end rounded-md px-2 py-1 text-xs font-semibold ${
+                          totalIsIncome
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-rose-50 text-rose-700"
+                        }`}
+                      >
+                        {totalDisplay.toLocaleString("hu-HU")} Ft
+                      </span>
+                    </TableCell>
+                    <TableCell />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Pie, PieChart, Sector, Label } from "recharts";
-import { PieSectorDataItem } from "recharts/types/polar/Pie";
+import type { PieSectorDataItem } from "recharts/types/polar/Pie";
 import {
   Card,
   CardContent,
@@ -25,7 +25,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-// helper: ad hoc színpaletta (shadcn chart CSS változók nélkül)
 const PALETTE = [
   "var(--chart-1)",
   "var(--chart-2)",
@@ -53,12 +52,9 @@ export function MonthlyCategoryPie({
   title?: string;
   subtitle?: string;
 }) {
-  // hozzárendelünk színt kategóriánként
-
-  console.log("data:" + data);
   const colored = React.useMemo<Slice[]>(
     () =>
-      data.map((d, i) => ({
+      (data ?? []).map((d, i) => ({
         ...d,
         fill: PALETTE[i % PALETTE.length],
       })),
@@ -66,6 +62,7 @@ export function MonthlyCategoryPie({
   );
 
   const [activeKey, setActiveKey] = React.useState(colored[0]?.category ?? "");
+
   const activeIndex = React.useMemo(
     () => colored.findIndex((s) => s.category === activeKey),
     [activeKey, colored]
@@ -85,14 +82,29 @@ export function MonthlyCategoryPie({
     () => colored.map((s) => s.category),
     [colored]
   );
-  const id = "monthly-category-pie";
 
+  const id = "monthly-category-pie";
   const total = colored.reduce((acc, s) => acc + s.value, 0);
 
+  if (!colored.length) {
+    return (
+      <Card className="flex h-full w-full flex-col">
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          {subtitle && <CardDescription>{subtitle}</CardDescription>}
+        </CardHeader>
+        <CardContent className="pb-4 text-sm text-muted-foreground">
+          Nincs adat a megadott időszakra.
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card data-chart={id} className="flex flex-col">
+    <Card data-chart={id} className="flex h-full w-full flex-col">
       <ChartStyle id={id} config={chartConfig} />
-      <CardHeader className="flex-row items-start space-y-0 pb-0">
+
+      <CardHeader className="flex flex-col items-start gap-3 pb-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div className="grid gap-1">
           <CardTitle>{title}</CardTitle>
           {subtitle && <CardDescription>{subtitle}</CardDescription>}
@@ -100,7 +112,7 @@ export function MonthlyCategoryPie({
 
         {categories.length > 0 && (
           <Select value={activeKey} onValueChange={setActiveKey}>
-            <SelectTrigger className="ml-auto h-7 w-[190px] rounded-lg pl-2.5">
+            <SelectTrigger className="h-8 w-full max-w-[220px] rounded-lg pl-2.5 text-xs sm:text-sm">
               <SelectValue placeholder="Válassz kategóriát" />
             </SelectTrigger>
             <SelectContent align="end" className="rounded-xl">
@@ -127,74 +139,78 @@ export function MonthlyCategoryPie({
         )}
       </CardHeader>
 
-      <CardContent className="flex flex-1 justify-center pb-0">
-        <ChartContainer
-          id={id}
-          config={chartConfig}
-          className="mx-auto aspect-square w-full max-w-[360px]"
-        >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={colored}
-              dataKey="value"
-              nameKey="category"
-              innerRadius={60}
-              strokeWidth={5}
-              activeIndex={Math.max(activeIndex, 0)}
-              activeShape={({
-                outerRadius = 0,
-                ...props
-              }: PieSectorDataItem) => (
-                <g>
-                  <Sector {...props} outerRadius={outerRadius + 10} />
-                  <Sector
-                    {...props}
-                    outerRadius={outerRadius + 25}
-                    innerRadius={outerRadius + 12}
-                  />
-                </g>
-              )}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    const value =
-                      colored[Math.max(activeIndex, 0)]?.value?.toLocaleString(
-                        "hu-HU"
-                      ) ?? "0";
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
+      <CardContent className="flex flex-1 items-center justify-center pb-4">
+        <div className="mx-auto w-full max-w-md sm:max-w-lg">
+          <ChartContainer
+            id={id}
+            config={chartConfig}
+            className="h-[260px] w-full sm:h-[320px] md:h-[360px]"
+          >
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Pie
+                data={colored}
+                dataKey="value"
+                nameKey="category"
+                innerRadius={60}
+                strokeWidth={5}
+                activeIndex={Math.max(activeIndex, 0)}
+                activeShape={({
+                  outerRadius = 0,
+                  ...props
+                }: PieSectorDataItem) => (
+                  <g>
+                    <Sector {...props} outerRadius={outerRadius + 10} />
+                    <Sector
+                      {...props}
+                      outerRadius={outerRadius + 25}
+                      innerRadius={outerRadius + 12}
+                    />
+                  </g>
+                )}
+              >
+                <Label
+                  content={({ viewBox }) => {
+                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                      const value =
+                        colored[
+                          Math.max(activeIndex, 0)
+                        ]?.value?.toLocaleString("hu-HU") ?? "0";
+
+                      return (
+                        <text
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-2xl font-bold"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
                         >
-                          {value} Ft
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 20}
-                          className="fill-muted-foreground text-xs"
-                        >
-                          Összesen: {total.toLocaleString("hu-HU")} Ft
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
-        </ChartContainer>
+                          <tspan
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            className="fill-foreground text-2xl font-bold"
+                          >
+                            {value} Ft
+                          </tspan>
+                          <tspan
+                            x={viewBox.cx}
+                            y={(viewBox.cy || 0) + 20}
+                            className="fill-muted-foreground text-xs"
+                          >
+                            Összesen: {total.toLocaleString("hu-HU")} Ft
+                          </tspan>
+                        </text>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+              </Pie>
+            </PieChart>
+          </ChartContainer>
+        </div>
       </CardContent>
     </Card>
   );

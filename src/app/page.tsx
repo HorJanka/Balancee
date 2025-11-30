@@ -7,9 +7,6 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { signOutAction } from "./actions/auth";
-import MonthlyCategoryPage from "@/components/MonthlySpendingByCategories/MonthlySpendingByCategories";
-import MonthlySpendingAndIncome from "@/components/MonthlySpendingAndIncome/MonthlySpendingAndIncome";
-import MonthlyExpensesPage from "@/components/MonthlyExpenses/MonthlyExpenses";
 
 export default async function Home() {
   const session = await auth.api.getSession({
@@ -28,9 +25,6 @@ export default async function Home() {
         <div className="flex flex-col gap-4 justify-center">
           <DailySpendingsChart />
           <MonthlySpendingsChart />
-          <MonthlyCategoryPage />
-          <MonthlySpendingAndIncome />
-          <MonthlyExpensesPage />
         </div>
         Welcome
         <form action={signOutAction}>

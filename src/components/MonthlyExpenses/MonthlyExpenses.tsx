@@ -18,7 +18,7 @@ export default async function MonthlyExpensesPage() {
   const category = await getCategoriesOptions();
 
   return (
-    <div className="p-4">
+    <div>
       <MonthlyExpensesTable
         data={data}
         categories={category}
