@@ -1,13 +1,10 @@
-import { getCategories } from "@/app/categories/actions";
 import DailySpendingsChart from "@/components/daily_spendings/DailySpendingsChart";
 import MonthChanger from "@/components/month_changer/MonthChanger";
 import MonthlySpendingsChart from "@/components/monthly_spendings/MonthlySpendingsChart";
 import { SpendingLimitCard } from "@/components/spending_limit/SpendingLimitCard";
-import TransactionsMenuBar from "@/components/TransactionsMenuBar";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { signOutAction } from "./actions/auth";
 
 interface HomeProps {
   searchParams: Promise<{ year?: string; month?: string }>;
@@ -22,7 +19,6 @@ export default async function Home({ searchParams }: HomeProps) {
     return redirect("/sign-in");
   }
 
-  const categories = await getCategories();
   const params = await searchParams;
 
   // Default to current date if no search params
@@ -41,17 +37,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <DailySpendingsChart year={year} month={month} />
           <MonthlySpendingsChart year={year} />
         </div>
-        Welcome
-        <form action={signOutAction}>
-          <button
-            type="submit"
-            className="w-full bg-red-600 text-white p-2.5 rounded-lg font-medium hover:bg-red-700 transition duration-200 shadow-lg hover:shadow-xl"
-          >
-            Logout
-          </button>
-        </form>
       </div>
-      <TransactionsMenuBar categories={categories} />
     </div>
   );
 }
