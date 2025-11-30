@@ -1,3 +1,5 @@
+"use client";
+
 import { signOutAction } from "@/app/actions/auth";
 import { LogOut, User } from "lucide-react";
 import { Button } from "../ui/button";
@@ -20,11 +22,9 @@ export function ProfileAvatar() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuItem asChild>
-          <form action={signOutAction}>
-            <LogOut className="mr-2" />
-            <button type="submit">Kijelentkezés</button>
-          </form>
+        <DropdownMenuItem onClick={() => signOutAction()}>
+          <LogOut className="mr-2" />
+          Kijelentkezés
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
