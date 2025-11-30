@@ -145,15 +145,15 @@ export function MonthlyExpensesTable({
 
                   return (
                     <TableRow key={row.id}>
-                      <TableCell className="whitespace-nowrap align-top text-xs sm:text-sm">
+                      <TableCell className="whitespace-nowrap align-center text-xs sm:text-sm">
                         {new Date(row.occurredAt).toLocaleDateString("hu-HU")}
                       </TableCell>
 
-                      <TableCell className="max-w-[420px] align-top text-xs text-muted-foreground sm:text-sm whitespace-normal break-words">
+                      <TableCell className="max-w-[420px] align-center text-xs text-muted-foreground sm:text-sm whitespace-normal break-words">
                         {row.description || "—"}
                       </TableCell>
 
-                      <TableCell className="align-top">
+                      <TableCell className="align-center">
                         {isIncome ? (
                           <span className="text-xs text-muted-foreground">
                             —
@@ -172,7 +172,7 @@ export function MonthlyExpensesTable({
                         )}
                       </TableCell>
 
-                      <TableCell className="text-right align-top">
+                      <TableCell className="text-right align-center">
                         <span
                           className={`inline-flex items-center justify-end rounded-md px-2 py-1 text-xs font-semibold ${amountBg}`}
                         >
@@ -180,7 +180,7 @@ export function MonthlyExpensesTable({
                         </span>
                       </TableCell>
 
-                      <TableCell className="text-right align-top">
+                      <TableCell className="text-right align-center">
                         <div className="flex justify-end gap-2">
                           <Button
                             variant="outline"
