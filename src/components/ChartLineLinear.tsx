@@ -42,8 +42,8 @@ export function ChartLineLinear({
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-auto lg:h-100">
+      <CardContent className="min-h-[100px] min-w-[350px] md:min-h-[100px] md:min-w-[1000px]">
+        <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
             data={chartData}
@@ -58,6 +58,8 @@ export function ChartLineLinear({
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              interval="preserveStartEnd"
+              
               tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
