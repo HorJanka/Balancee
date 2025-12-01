@@ -35,7 +35,7 @@ export async function deleteFixedIncome(id : number) {
         .delete(monthlyIncome)
         .where(eq(monthlyIncome.id, id));
 
-    revalidatePath("/monthlyIncome");
+revalidatePath("/fixed-income");
 }
 
 export async function updateFixedIncome(income : FixedIncomeState, id? : number) {
