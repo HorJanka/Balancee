@@ -1,4 +1,4 @@
-import { BanknoteArrowDown, ChartNoAxesColumn, SlidersHorizontal, Tag } from "lucide-react";
+import { BanknoteArrowDown, BarChart3, SlidersHorizontal, Tag } from "lucide-react";
 import Link from "next/link";
 import { ComponentType } from "react";
 import {
@@ -30,7 +30,7 @@ const menuItems: MenuItem[] = [
   {
     name: "Statisztikák",
     href: "/statistics",
-    icon: ChartNoAxesColumn,
+    icon: BarChart3,
   },
   {
     name: "Rendszeres bevétel",
