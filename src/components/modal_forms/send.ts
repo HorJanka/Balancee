@@ -35,6 +35,9 @@ export async function saveIncome(formData : IncomeState) {
                 description: formData.description
             });
     }
+
+    revalidatePath("/fixed-income");
+    revalidatePath("/statistics");
 }
 
 export async function saveExpense(formData : ExpenseState) {
@@ -56,4 +59,5 @@ export async function saveExpense(formData : ExpenseState) {
     
     // Revalidate the page to refresh the charts
     revalidatePath("/");
+    revalidatePath("/statistics");
 }
