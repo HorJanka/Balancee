@@ -52,6 +52,9 @@ export const transactions = pgTable("transactions", {
   categoryId: integer("category_id").references(() => categories.id, {
     onDelete: "set null",
   }),
+  monthlyIncomeId: integer("monthly_income_id").references(() => monthlyIncome.id, {
+    onDelete: "set null",
+  }),
   amount: integer("amount").notNull(),
   occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull(),
   description: varchar("description", { length: 500 }),
@@ -178,13 +181,18 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
     fields: [transactions.categoryId],
     references: [categories.id],
   }),
+  monthlyIncome: one(monthlyIncome, {
+    fields: [transactions.monthlyIncomeId],
+    references: [monthlyIncome.id],
+  }),
 }));
 
-export const monthlyIncomeRelations = relations(monthlyIncome, ({ one }) => ({
+export const monthlyIncomeRelations = relations(monthlyIncome, ({ one, many }) => ({
   user: one(users, {
     fields: [monthlyIncome.userId],
     references: [users.id],
   }),
+  transactions: many(transactions)
 }));
 
 export const spendingLimitRelations = relations(spendingLimit, ({ one }) => ({
