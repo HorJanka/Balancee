@@ -35,7 +35,7 @@ export async function deleteFixedIncome(id : number) {
         .delete(monthlyIncome)
         .where(eq(monthlyIncome.id, id));
 
-revalidatePath("/fixed-income");
+    revalidatePath("/fixed-income");
 }
 
 export async function updateFixedIncome(income : FixedIncomeState, id? : number) {
@@ -56,7 +56,7 @@ export async function updateFixedIncome(income : FixedIncomeState, id? : number)
             })
             .where(eq(monthlyIncome.id, id));
         
-        revalidatePath("/monthlyIncome");
+        revalidatePath("/fixed-income");
         return;
     }
 
@@ -70,5 +70,5 @@ export async function updateFixedIncome(income : FixedIncomeState, id? : number)
                 userId: session.user.id
             });
 
-    revalidatePath("/monthlyIncome");
+    revalidatePath("/fixed-income");
 }

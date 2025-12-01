@@ -36,7 +36,7 @@ export async function saveIncome(formData : IncomeState) {
             });
     }
 
-    revalidatePath("/monthlyIncome");
+    revalidatePath("/fixed-income");
     revalidatePath("/statistics");
 }
 
