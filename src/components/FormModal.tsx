@@ -37,7 +37,7 @@ export default function FormModal({
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
           </DrawerHeader>
-          <div className="mx-auto mb-6 max-h-[60vh] max-w-[40%] overflow-y-auto">
+          <div className="mx-auto mb-6 max-h-[60vh] px-2 overflow-y-auto md:max-w-[40%]">
             {children}
             <DrawerClose asChild className={styles.cancel}>
               <Button variant="outline">Mégsem</Button>

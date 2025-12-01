@@ -4,12 +4,17 @@ import MonthlySpendingsChart from "@/components/monthly_spendings/MonthlySpendin
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import MonthlyCategoryPage from "@/components/MonthlySpendingByCategories/MonthlySpendingByCategories";
+import MonthlySpendingAndIncome from "@/components/MonthlySpendingAndIncome/MonthlySpendingAndIncome";
+import MonthlyExpensesPage from "@/components/MonthlyExpenses/MonthlyExpenses";
 
 interface StatisticsProps {
   searchParams: Promise<{ year?: string; month?: string }>;
 }
 
-export default async function StatisticsPage({ searchParams }: StatisticsProps) {
+export default async function StatisticsPage({
+  searchParams,
+}: StatisticsProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -29,6 +34,9 @@ export default async function StatisticsPage({ searchParams }: StatisticsProps) 
       <MonthChanger />
       <DailySpendingsChart year={year} month={month} />
       <MonthlySpendingsChart year={year} />
+      <MonthlyCategoryPage year={year} month={month} />
+      <MonthlySpendingAndIncome year={year} />
+      <MonthlyExpensesPage year={year} month={month} />
     </div>
   );
 }
