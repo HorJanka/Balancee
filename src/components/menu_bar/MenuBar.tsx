@@ -1,3 +1,5 @@
+"use client"
+
 import { BanknoteArrowDown, BarChart3, SlidersHorizontal, Tag } from "lucide-react";
 import Link from "next/link";
 import { ComponentType } from "react";
