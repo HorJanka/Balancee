@@ -51,7 +51,7 @@ export default function MonthChanger() {
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? formatDate(date) : <span>Pick a month</span>}
+          {date ? formatDate(date) : <span>Válasszon egy hónapot</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

@@ -3,6 +3,7 @@
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useState } from "react";
+import { addAllTransactionFromMonthlyIncome } from "../fixed-income/action";
 
 export default function SignInForm() {
 
@@ -31,6 +32,7 @@ export default function SignInForm() {
             },
             onSuccess: () => {
                 console.log("Sign in successfull!");
+                addAllTransactionFromMonthlyIncome();
             },
             onError: (ctx) => {
                 //setError(ctx.error.message);
