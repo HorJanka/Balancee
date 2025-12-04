@@ -1,3 +1,4 @@
+import RatingDialog from "@/components/rating/RatingDialog";
 import { SpendingLimitCard } from "@/components/spending_limit/SpendingLimitCard";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -15,6 +16,7 @@ export default async function Home() {
   return (
     <div className="flex items-center justify-center">
       <SpendingLimitCard />
+      <RatingDialog />
     </div>
   );
 }
