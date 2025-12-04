@@ -1,3 +1,4 @@
+import { getShouldRequestRating } from "@/components/rating/actions";
 import RatingDialog from "@/components/rating/RatingDialog";
 import { SpendingLimitCard } from "@/components/spending_limit/SpendingLimitCard";
 import { auth } from "@/lib/auth";
@@ -13,10 +14,12 @@ export default async function Home() {
     return redirect("/sign-in");
   }
 
-  return (
+  const shouldRequestRating = await getShouldRequestRating();
+
+  return (<>
     <div className="flex items-center justify-center">
       <SpendingLimitCard />
-      <RatingDialog />
     </div>
-  );
+    {shouldRequestRating && <RatingDialog />}
+  </>);
 }
