@@ -105,6 +105,24 @@ export const spendingLimit = pgTable("spending_limit", {
     .$onUpdate(() => new Date()),
 });
 
+// RATINGS
+export const ratings = pgTable("ratings", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: text("user_id")
+    .notNull()
+    .unique() // This ensures one-to-one relationship
+    .references(() => users.id, { onDelete: "cascade" }),
+  rating: integer("rating").notNull(), // 1-5 stars
+  feedback: text("feedback"), // Maybe in the future
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
 // AUTH
 
 export const session = pgTable("session", {
@@ -157,11 +175,12 @@ export const verification = pgTable("verification", {
 
 
 //RELATIONS
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one,many }) => ({
   categories: many(categories),
   transactions: many(transactions),
   monthlyIncomes: many(monthlyIncome),
   spendingLimits: many(spendingLimit),
+  rating: one(ratings)
 }));
 
 export const categoriesRelations = relations(categories, ({ one, many }) => ({
@@ -198,6 +217,13 @@ export const monthlyIncomeRelations = relations(monthlyIncome, ({ one, many }) =
 export const spendingLimitRelations = relations(spendingLimit, ({ one }) => ({
   user: one(users, {
     fields: [spendingLimit.userId],
+    references: [users.id],
+  }),
+}));
+
+export const ratingsRelations = relations(ratings, ({ one }) => ({
+  user: one(users, {
+    fields: [ratings.userId],
     references: [users.id],
   }),
 }));
