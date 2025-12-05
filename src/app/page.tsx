@@ -1,7 +1,9 @@
+import RatingDialogWrapper from "@/components/rating/RatingDialogWrapper";
 import { SpendingLimitCard } from "@/components/spending_limit/SpendingLimitCard";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function Home() {
   const session = await auth.api.getSession({
@@ -13,8 +15,13 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex items-center justify-center">
-      <SpendingLimitCard />
-    </div>
+    <>
+      <div className="flex items-center justify-center">
+        <SpendingLimitCard />
+      </div>
+      <Suspense fallback={null}>
+        <RatingDialogWrapper />
+      </Suspense>
+    </>
   );
 }
