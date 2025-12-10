@@ -4,7 +4,8 @@ import {
   varchar,
   timestamp,
   boolean,
-  text
+  text,
+  uuid
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -121,6 +122,16 @@ export const ratings = pgTable("ratings", {
     .defaultNow()
     .notNull()
     .$onUpdate(() => new Date()),
+});
+
+export const appSessions = pgTable("app_sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  startedAt: timestamp("started_at").defaultNow().notNull(),
+  lastHeartbeat: timestamp("last_heartbeat").defaultNow().notNull(),
+  // duration:  (lastHeartbeat - startedAt)
 });
 
 // AUTH
