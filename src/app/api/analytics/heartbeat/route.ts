@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
 import { appSessions } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { getSessionKpi } from "@/app/actions/session";
 
 export async function POST(req: Request) {
@@ -11,14 +11,15 @@ export async function POST(req: Request) {
     headers: await headers(),
   });
 
-  if (!session?.user) {
-    return new NextResponse("Unauthorized", { status: 401 });
-  }
+  if (!session?.user) return new NextResponse("Unauthorized", { status: 401 });
 
-  const { sessionId } = await req.json();
+  const body = await req.json();
+  const sessionId = body.sessionId;
+  const incrementBy = body.incrementBy || 0; // Start with 0, when new session is started
 
   if (!sessionId) {
-    // First case: Start a new session
+
+    // Start new session
     const [newSession] = await db.insert(appSessions).values({
       userId: session.user.id,
       startedAt: new Date(),
@@ -27,12 +28,16 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ sessionId: newSession.id });
   } else {
-    // Second case: Update existing session (Heartbeat)
+
+    // Increase the active time
     await db.update(appSessions)
-      .set({ lastHeartbeat: new Date() })
+      .set({ 
+        lastHeartbeat: new Date(),
+        activeSeconds: sql`${appSessions.activeSeconds} + ${incrementBy}`
+      })
       .where(eq(appSessions.id, sessionId));
 
-    return NextResponse.json({ sessionId }); // Send back the same
+    return NextResponse.json({ sessionId });
   }
 }
 

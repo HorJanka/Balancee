@@ -131,7 +131,7 @@ export const appSessions = pgTable("app_sessions", {
     .references(() => users.id, { onDelete: "cascade" }),
   startedAt: timestamp("started_at").defaultNow().notNull(),
   lastHeartbeat: timestamp("last_heartbeat").defaultNow().notNull(),
-  // duration:  (lastHeartbeat - startedAt)
+  activeSeconds: integer("active_seconds").default(0).notNull(), 
 });
 
 // AUTH

@@ -5,16 +5,9 @@ import { sql } from "drizzle-orm";
 export async function getSessionKpi() {
   const result = await db
     .select({
-      // 1. Every session count
       totalSessions: sql<number>`count(*)`,
       
-      // 2. Average use time in seconds
-      // (lastHeartbeat - startedAt) average
-      averageDurationSeconds: sql<number>`
-        avg(
-          EXTRACT(EPOCH FROM (${appSessions.lastHeartbeat} - ${appSessions.startedAt}))
-        )
-      `
+      averageDurationSeconds: sql<number>`avg(${appSessions.activeSeconds})`
     })
     .from(appSessions);
 
@@ -25,8 +18,7 @@ export async function getSessionKpi() {
   return {
     totalSessions: stats.totalSessions,
     avgTimeSeconds: avgSeconds,
-    avgTimeText: `${avgMinutes} perc`,
-    // Check kpi status
-    isGoalMet: avgSeconds <= 120 // 2 minutes = 120 seconds
+    avgTimeText: `${avgMinutes} minutes`,
+    isGoalMet: avgSeconds <= 120
   };
 }
