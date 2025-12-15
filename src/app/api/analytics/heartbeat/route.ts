@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/db";
 import { appSessions } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";
-import { getSessionKpi } from "@/app/actions/analytics/session";
+import { getSessionKpi } from "@/app/actions/analytics/kpi";
 
 export async function POST(req: Request) {
   const session = await auth.api.getSession({
