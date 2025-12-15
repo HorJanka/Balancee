@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { getCategories } from "./categories/actions";
 import "./globals.css";
+import { SessionTracker } from "@/components/SessionTracker";
 
 export const metadata: Metadata = {
   title: "Balancee",
@@ -27,10 +28,12 @@ export default async function RootLayout({
     <html lang="en">
       <body className="flex flex-col h-screen">
         {session && (
+          <>
+          <SessionTracker />
           <header className="sticky top-0 bg-linear-to-br from-green-50 to-lime-100 h-fit px-6 py-4 w-full">
             <MenuBar />
           </header>
-        )}
+        </>)}
 
         <main className={cn("flex-1 overflow-auto", session && "py-6")}>{children}</main>
 
