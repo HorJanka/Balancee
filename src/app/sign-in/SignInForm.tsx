@@ -4,6 +4,7 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useState } from "react";
 import { addAllTransactionFromMonthlyIncome } from "../fixed-income/action";
+import trackUserActivity from "../actions/analytics/trackUserActivity";
 
 export default function SignInForm() {
 
@@ -30,9 +31,10 @@ export default function SignInForm() {
             onRequest: () => {
                 console.log("Signing in...");
             },
-            onSuccess: () => {
+            onSuccess: async () => {
                 console.log("Sign in successfull!");
-                addAllTransactionFromMonthlyIncome();
+                await addAllTransactionFromMonthlyIncome();
+                await trackUserActivity("LOGIN");
             },
             onError: (ctx) => {
                 //setError(ctx.error.message);

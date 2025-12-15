@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import MonthlyCategoryPage from "@/components/MonthlySpendingByCategories/MonthlySpendingByCategories";
 import MonthlySpendingAndIncome from "@/components/MonthlySpendingAndIncome/MonthlySpendingAndIncome";
 import MonthlyExpensesPage from "@/components/MonthlyExpenses/MonthlyExpenses";
+import trackUserActivity from "../actions/analytics/trackUserActivity";
 
 interface StatisticsProps {
   searchParams: Promise<{ year?: string; month?: string }>;
@@ -22,6 +23,8 @@ export default async function StatisticsPage({
   if (!session) {
     return redirect("/sign-in");
   }
+
+  await trackUserActivity("VIEW_STATS");
 
   const params = await searchParams;
 

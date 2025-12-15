@@ -5,7 +5,9 @@ import {
   timestamp,
   boolean,
   text,
-  uuid
+  uuid,
+  date,
+  primaryKey
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -131,8 +133,22 @@ export const appSessions = pgTable("app_sessions", {
     .references(() => users.id, { onDelete: "cascade" }),
   startedAt: timestamp("started_at").defaultNow().notNull(),
   lastHeartbeat: timestamp("last_heartbeat").defaultNow().notNull(),
-  activeSeconds: integer("active_seconds").default(0).notNull(), 
+  activeSeconds: integer("active_seconds").default(0).notNull(),
 });
+
+export const userDailyActivity = pgTable("user_daily_activity", {
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  
+  date: date("date").notNull(),
+  
+  hasLoggedIn: boolean("has_logged_in").default(false),
+  expensesAdded: integer("expenses_added").default(0),
+  hasViewedStats: boolean("has_viewed_stats").default(false),
+}, (table) => [
+  primaryKey({ columns: [table.userId, table.date] }),
+]);
 
 // AUTH
 
@@ -186,7 +202,7 @@ export const verification = pgTable("verification", {
 
 
 //RELATIONS
-export const usersRelations = relations(users, ({ one,many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   categories: many(categories),
   transactions: many(transactions),
   monthlyIncomes: many(monthlyIncome),

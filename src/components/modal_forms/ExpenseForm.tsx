@@ -20,6 +20,7 @@ import { handleInputChange, setState } from "./helpers";
 import { validateExpense } from "./validation";
 import { saveExpense } from "./send";
 import { DateTime } from "luxon";
+import trackUserActivity from "@/app/actions/analytics/trackUserActivity";
 
 export default function ExpenseForm({
   categories,
@@ -60,6 +61,7 @@ export default function ExpenseForm({
 
     // Send validated data to database
     await saveExpense(sendData);
+    await trackUserActivity("ADD_EXPENSE");
   }
 
   return (
